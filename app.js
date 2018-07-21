@@ -1,5 +1,9 @@
+// configs
+const module = 'candidatooficial';
+const api = './api/';
+
 (function () {
-    angular.module('jajaooficial', [
+    angular.module(module, [
         'ui.router',                    // Routing
         'oc.lazyLoad',                  // ocLazyLoad
         'ui.bootstrap',                 // Ui Bootstrap
@@ -7,4 +11,4 @@
         'ngIdle',                       // Idle timer
         'ngSanitize'                    // ngSanitize
     ]);
-});
+})();
