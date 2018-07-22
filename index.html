@@ -17,7 +17,8 @@
     <link href="api/libs/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body ng-controller="mainCtrl as main" class="{{$state.current.data.specialClass}}" landing-scrollspy id="page-top">
-    
+    <!-- Main view  -->
+    <div ui-view></div>
 </body>
     <!-- Main Angular scripts-->
     <script src="api/libs/js/jquery/jquery-2.1.1.min.js"></script>
@@ -36,6 +37,7 @@
 
     <!-- controllers -->
     <script src="app/controllers/mainCtrl.js"></script>
+    <script src="app/controllers/loginCtrl.js"></script>
 
     <!-- services -->
     <script src="app/services/authenticationAPIService.js"></script>

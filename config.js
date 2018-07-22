@@ -9,9 +9,15 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
     $stateProvider
         .state('home', {
             url: "/home",
-            templateUrl: "views/home.html",
+            templateUrl: "app/views/home.html",
             controller: "homeCtrl",
             data: { pageTitle: 'Home', specialClass: 'gray-bg'},
+        })
+        .state('login', {
+            url: "/login",
+            templateUrl: "app/views/login.html",
+            controller: "loginCtrl",
+            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
         })
         
 }
