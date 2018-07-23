@@ -115,7 +115,8 @@ Class UsuarioDAO {
 		if ( !$result ) {
 			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Usuario' , 'ListarPaginado' ) );
 		}else{
-			while ( $row = mysqli_fetch_assoc ( $result ) ) {				array_push( $this->lista, $row);
+			while ( $row = mysqli_fetch_assoc ( $result ) ) {				
+				array_push( $this->lista, $row);
 			}
 
 			$this->superdao->setSuccess( true );			$this->superdao->setData( $this->lista );
@@ -146,6 +147,29 @@ Class UsuarioDAO {
 
 		$this->superdao->setSuccess( true );
 		$this->superdao->setData( true );
+
+		return $this->superdao->getResponse();
+	}
+
+	function logar ($usuario, $senha) {
+		$this->sql = "SELECT u.*, l.nome 
+		from usuario u
+		left join lider l on l.id = u.idlider
+		where usuario = '$usuario' and senha = '$senha'";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if (!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Usuario', 'Logar' ));
+		}else{
+			if ($row = mysqli_fetch_assoc($result)) {
+				$this->superdao->setSuccess( true );
+				$this->superdao->setData($row);
+			}else{
+				$this->superdao->setSuccess( false );
+			}
+		}
 
 		return $this->superdao->getResponse();
 	}

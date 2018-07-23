@@ -40,7 +40,10 @@ Class UsuarioControl {
 		return $this->objDAO->deletar($this->obj);
 	}
 	function listarPaginado ($start, $limit) {
-	return $this->objDAO->listarPaginado($start, $limit);
+		return $this->objDAO->listarPaginado($start, $limit);
+	}
+	function logar ($usuario, $senha) {
+		return $this->objDAO->logar($usuario, $senha);
 	}
 	function qtdTotal () {
 		return $this->objDAO->qtdTotal();

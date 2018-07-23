@@ -3,7 +3,7 @@ angular.module(module).service("authenticationAPI", function ($q, $location, $ro
 	function _genericAuthentication (data) {
 		return $http({
 			method: 'POST',
-			url: "rest/autoload.php",
+			url: api + "src/rest/autoload.php",
 			data: {
 				metodo: data.metodo,
 				data: data.data,

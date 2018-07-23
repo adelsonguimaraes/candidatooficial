@@ -1,39 +1,78 @@
 <?php
 /*
-	Projeto: Candidato Oficial.
-	Project Owner: .
+	Projeto: AdminSPE.
+	Project Owner: Priscila.
 	Gerente de Projeto: Nilton Caldas Jr.
-	Desenvolvedor: Adelson Guimaraes.
-	Data de início: 19/07/2018.
-	Data Atual: 22/07/2018.
+	Desenvolvedor: Adelson Guimarães Monteiro.
+	Data de início: 02/05/2017.
+	Data Atual: 07/05/2017.
 */
 
-//Trata requisição
-if(!$_POST){
-	if($_GET) {$_POST = $_GET;}
-	else{$_POST =  file_get_contents ( 'php://input' );}}
+/* Trata $_POST */
+if(!$_POST){ $_POST =  file_get_contents ( "php://input" ); }
+$_POST = json_decode ($_POST, true);
 
-// conexao
-require_once("../util/Conexao.php");
+/*
+	Require da Conex�o
+*/
+require_once("../../util/Conexao.php");
 
-// carrega class
+/*
+	Require da Resolve
+*/
+require_once("../../util/ResolveMysqlError.php");
+
+
+/*
+	Fun��o AutoLoad, Carrega as Classes quando
+	tenta-se criar uma nova instancia de uma Classe.
+	Exemplo: new Cupom(), new UsuarioDAO(), new EmpresaControl()... 
+*/
 function carregaClasses($class){
-	//Verifica se existe Control no nome da classe
+	/*
+		Verifica se existe "Control" no nome da classe
+	*/
+//  	if(strripos($class, "Control")) {
 	if(strrpos($class, "Control")) {
-		require_once("../control/".$class.".php");
-	//Verifica se existe DAO no nome da classe
-	}else if(strrpos($class, "DAO")) {
-		$bean = strtolower(substr($class, 0, strrpos($class, "DAO")));
-		require_once "../model/".$bean."/".$class.".php";
- 	//se nao for control ou dao é model
+ 		/*	require na Control */ 
+ 		require_once("../control/".$class.".php");
+ 	}
+ 	/*
+		Verifica se existe "Control" no nome da classe
+	*/
+ 	else if(strrpos($class, "DAO")) {
+ 		/* Monta o nome da Bean */
+ 		$bean = strtolower(substr($class, 0, strrpos($class, "DAO")));
+ 		/*	require na DAO */
+ 		require_once "../model/".$bean."/".$class.".php";
+ 	/*
+		Se n�o for DAO nem Control � Model.
+	*/
  	}else{
-		$bean = strtolower($class);
-		require_once "../model/".$bean."/".$class.".php";
+ 		/* Monta o nome da Bean */
+ 		$bean = strtolower($class);
+ 		/*	require na model */
+ 		require_once "../model/".$bean."/".$class.".php";
+ 	}
+}
+
+/*
+	Chama o AutoLoad
+*/
+spl_autoload_register("carregaClasses");
+
+/*
+	Geta o Rest
+*/
+function getRest($class) {
+	if($class) {
+		require_once $class.".php";
 	}
 }
 
-//chama autoload
-spl_autoload_register("carregaClasses");
+/*
+	Chama a fun��o GetRest
+*/
+getRest($_POST['class']);
 
-// Classe gerada com BlackCoffeePHP 2.0 - by Adelson Guimarães
 ?>

@@ -15,6 +15,7 @@
 
     <!-- Font awesome -->
     <link href="api/libs/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/css/style.css">
 </head>
 <body ng-controller="mainCtrl as main" class="{{$state.current.data.specialClass}}" landing-scrollspy id="page-top">
     <!-- Main view  -->
@@ -32,12 +33,19 @@
     <script src="api/libs/js/ui-router/angular-ui-router.min.js"></script>
     <script src="api/libs/js/bootstrap/ui-bootstrap-tpls-1.1.2.min.js"></script>
     <script src="api/libs/js/plugins/angular-idle/angular-idle.js"></script>
+
+    <script src="api/libs/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="api/libs/js/plugins/sweetalert/angular-sweetalert.min.js"></script>
+
+    <script src="api/libs/js/MD5.js"></script>
+
     <script src="app.js"></script>
     <script src="config.js"></script>
 
     <!-- controllers -->
     <script src="app/controllers/mainCtrl.js"></script>
     <script src="app/controllers/loginCtrl.js"></script>
+    <script src="app/controllers/homeCtrl.js"></script>
 
     <!-- services -->
     <script src="app/services/authenticationAPIService.js"></script>
