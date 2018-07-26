@@ -1,8 +1,28 @@
 angular.module(module).controller('menuCtrl', function ($location, $rootScope, $scope) {
-    $rootScope.menu = 'app/views/commons/';
-    $rootScope.menu += ($rootScope.usuario.idlider > 0) ? 'subheaderPanelLider.html' : 'subheaderPanel.html';
     
+    if ($rootScope.usuario) {
+        $rootScope.menu = 'app/views/commons/';
+        $rootScope.menu += ($rootScope.usuario.idlider > 0) ? 'subheaderPanelLider.html' : 'subheaderPanel.html';
+    }
+    
+    var activeMenu = function (item) {
+        var menus = document.querySelector('.subheader-menu');
+        if (menus!==null) {
+            menus.querySelectorAll('a');
+            for (i in menus) {
+                if (menus[i] !== null && menus[i].tagName === 'A') {
+                    menus[i].classList.remove('subheader-menu-active');
+                    if (menus[i].id === item) menus[i].classList.add('subheader-menu-active');
+                }
+            }
+        }
+    }
+    activeMenu(window.location.hash.replace('#/',''));
+
+
     $scope.itemClick = function (item) {
+        activeMenu(item);
+
         switch (item) {
             case 'home':
                 $location.path('/home');
@@ -12,8 +32,7 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
                 // $location.path('/login');
                 break;
             case 'filiar':
-                alert('Fialiar');
-                // $location.path('/login');
+                $location.path('/filiar');
                 break;
             case 'login':
                 $location.path('/login');
@@ -26,7 +45,7 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
                 $location.path('/lideres');
                 break;
             case 'filiados':
-                $location.path('/login');
+                $location.path('/filiados');
                 break;
             case 'logout':
                 $rootScope.logout();

@@ -102,7 +102,9 @@ Class FiliadoDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT * FROM filiado";
+		$this->sql = "SELECT f.*, b.nome as 'bairro'
+		FROM filiado f
+		inner join bairro b on b.id = f.idbairro";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();

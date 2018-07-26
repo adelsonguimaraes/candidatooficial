@@ -14,14 +14,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="obj in lideres">
+                    <tr ng-repeat="obj in filiados">
                         <td>{{obj.nome}}</td>
                         <td>{{obj.bairro}}</td>
                         <td>{{obj.celular | cel}}</td>
                         <td>
                             <div class="btna-group">
-                                <button class="btn btn-success btn-small" ng-click="edit(obj)"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-danger btn-small"><i class="fa fa-close"></i></button>
+                                <button class="btn btn-success btn-small" ng-click="edit(obj)">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-small">
+                                    <i class="fa fa-close"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -29,7 +33,7 @@
             </table>
         </div>
     </div>
-    <div id="form" style="padding:10px 20px;" ng-if="novo">
+    <div id="form" style="padding:10px 20px; margin-bottom:40px;" ng-if="novo">
         <form>
             <input type="hidden" class="form-control" id="id" ng-model="obj.id">
             <div class="form-group">
@@ -37,13 +41,8 @@
                 <input type="text" class="form-control" id="nome" ng-model="obj.nome">
             </div>
             <div class="form-group">
-                <label for="Tipo">Tipo:</label>
-                <select class="form-control" name="funcao" id="tipolider" ng-model="obj.idtipolider" ng-options="obj.id as obj.descricao for obj in tiposlider">
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="nome">Função:</label>
-                <select class="form-control" name="funcao" id="funcao" ng-model="obj.idfuncao" ng-options="obj.id as obj.descricao for obj in funcoes">
+                <label for="datanascimento">Data Nascimento:</label>
+                <input type="date" class="form-control" id="datanascimento" ng-model="obj.datanascimento">
                 </select>
             </div>
             
@@ -56,7 +55,7 @@
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" ng-model="obj.email">
             </div>
-            
+
             <!-- <h4>Endereço</h4><hr> -->
             <div class="form-group">
                 <label for="nome">Bairro:</label>

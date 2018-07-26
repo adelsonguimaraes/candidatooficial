@@ -24,9 +24,9 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
         $scope.novo = true;
         $scope.obj = {
             id: null,
-            idtipolider: null,
-            idfuncao: null,
-            idbairro: null,
+            idtipolider: $scope.tiposlider[0].id,
+            idfuncao: $scope.funcoes[0].id,
+            idbairro: $scope.bairros[0],
             nome: null,
             endereco: null,
             numero: null,
