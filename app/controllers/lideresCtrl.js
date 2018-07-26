@@ -22,6 +22,22 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
 
     $scope.clickNovo = function () {
         $scope.novo = true;
+        $scope.obj = {
+            id: null,
+            idtipolider: null,
+            idfuncao: null,
+            idbairro: null,
+            nome: null,
+            endereco: null,
+            numero: null,
+            complemento: null,
+            cidade: null,
+            uf: null,
+            cep: null,
+            localidade: null,
+            celular: null,
+            email: null
+        }
     }
     $scope.cancelar = function () {
         $scope.novo = false;
@@ -36,7 +52,8 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                     $scope.tiposlider = response.data.data;
                     $scope.obj.idtipolider = (response.data.data.length > 0) ? response.data.data[0].id : null;
                 } else {
-                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    alert(response.data.msg);
+                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -51,7 +68,8 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                 if (response.data.success) {
                     $scope.lideres = response.data.data;
                 } else {
-                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    alert(response.data.msg);
+                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -67,7 +85,8 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                     $scope.funcoes = response.data.data;
                     $scope.obj.idfuncao = (response.data.data.length > 0) ? response.data.data[0].id : null;
                 } else {
-                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    alert(response.data.msg);
+                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -83,8 +102,9 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                 if (response.data.success) {
                     $scope.bairros = response.data.data;
                     $scope.obj.idbairro = (response.data.data.length > 0) ? response.data.data[0].id : null;
-                } else {
-                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                } else {response.data.msg
+                    alert(response.data.msg);
+                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -92,6 +112,42 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
     listarBairros();
 
     $scope.cadastrar = function (obj) {
-        console.log(obj);
+        if (obj.id > 0) {
+            var dados = { 'session': true, 'metodo': 'atualizar', 'data': obj, 'class': 'lider' };
+        } else {
+            var dados = { 'session': true, 'metodo': 'cadastrar', 'data': obj, 'class': 'lider' };
+        }
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.cancelar();
+                    // SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
+                    alert('Cadastrado com Sucesso');
+                } else {
+                    alert(response.data.msg);
+                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    $scope.edit = function (obj) {
+        $scope.novo = true;
+        $scope.obj = {
+            id: obj.id,
+            idtipolider: obj.idtipolider,
+            idfuncao: obj.idfuncao,
+            idbairro: obj.idbairro,
+            nome: obj.nome,
+            endereco: obj.endereco,
+            numero: obj.numero,
+            complemento: obj.complemento,
+            cidade: obj.cidade,
+            uf: obj.uf,
+            cep: obj.cep,
+            localidade: obj.localidade,
+            celular: obj.celular,
+            email: obj.email
+        }
     }
 });

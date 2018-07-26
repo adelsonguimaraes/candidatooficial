@@ -1,4 +1,7 @@
 angular.module(module).controller('menuCtrl', function ($location, $rootScope, $scope) {
+    $rootScope.menu = 'app/views/commons/';
+    $rootScope.menu += ($rootScope.usuario.idlider > 0) ? 'subheaderPanelLider.html' : 'subheaderPanel.html';
+    
     $scope.itemClick = function (item) {
         switch (item) {
             case 'home':
