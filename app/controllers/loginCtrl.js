@@ -37,7 +37,7 @@ angular.module(module).controller('loginCtrl', function ($location, $rootScope, 
 		.then(function successCallback(response) {
 			if (response.data.success === true) {
 				authenticationAPI.createSession(response.data.data, false);
-				$location.path('/home');
+				$location.path('/panel');
 			}else{
 				$scope.loginerror.error = true;
 				$scope.loginerror.msg = 'Login ou Senha inválidos';

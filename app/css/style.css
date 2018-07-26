@@ -5,23 +5,98 @@
 html, body {
     height: 100vh;
     width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
 }
 body {
-    background: rgb(53, 53, 53);
+    background: rgb(255, 255, 255);
+}
+.wapp {
+    height: 100vh;
+    width: 100%;
+    position: relative;
 }
 header {
-    background: rgb(0, 153, 255);
-    height: 150px;
+    background: #00487C;
+    /* height: 60px; */
     display: block;
     text-align: center;
+    padding: 10px;
 }
 header h1 {
     color: #fff;
     margin: 0;
-    padding: 10px;
+    padding: 0px;
+    font-size: 30px;
     font-weight: bold;
+}
+header a {
+    color: #fff;
+    font-size: 18px;
+    text-decoration: none;
+}
+header i {
+    padding: 5px;
+    color: #fff;
 }
 .subheader {
     background: #fff;
-    height: 40px;
+    border-bottom: 1px solid #e5e5e5;
+    /* height: 40px; */
+}
+.subheader-menu {
+    display: flex;
+    text-align: center;
+}
+.subheader-menu a {
+    flex: 1;
+    text-decoration: none;
+    color: #3E6680;
+    font-weight: bold;
+    padding: 10px;
+    background: #ffffff;
+    /* border-left: 1px solid #a3aab0; */
+}
+.subheader-menu a:hover {
+    background: #87a0b3;
+    color: #fff;
+}
+.subheader-menu a:nth-child(1) {
+    border:none;
+}
+.subheader-menu a i {
+    display: block;
+    font-size: 20px;
+    padding: 5px;
+}
+.banner {
+    background: #00487ce0;
+    padding: 10px 2px;
+}
+.bibliografia {
+    padding:10px;
+    background: #fff;
+    clear: both;
+}
+.bibliografia p {
+    text-align: justify;
+}
+footer {
+    background: #00487C;
+    /* height: 60px; */
+    /* display: block; */
+    text-align: center;
+    padding: 15px;
+    color: #fff;
+    bottom:0;
+    width: 100%;
+}
+
+
+@media (min-width: 1200px) {
+    footer {
+        position: absolute;
+    }
+    /* .wapp {
+        position: initial;
+    } */
 }

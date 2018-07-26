@@ -118,7 +118,7 @@ angular.module(module).service("authenticationAPI", function ($q, $location, $ro
 	        		window.localStorage.removeItem("sessionCandidatoOficial");
 	        		$rootScope.usuario = "";
 					//delete $rootScope.menus;
-	        		$location.path("/login");
+	        		$location.path("/home");
 	        	}
 	        });	
         };

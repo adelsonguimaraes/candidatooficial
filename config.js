@@ -19,6 +19,12 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             controller: "loginCtrl",
             data: { pageTitle: 'Login', specialClass: 'gray-bg'},
         })
+        .state('panel', {
+            url: "/panel",
+            templateUrl: "app/views/panel.html",
+            controller: "panelCtrl",
+            data: { pageTitle: 'Painel', specialClass: 'gray-bg' },
+        })
         
 }
 angular
