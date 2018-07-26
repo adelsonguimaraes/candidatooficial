@@ -1,5 +1,5 @@
 function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdleProvider, KeepaliveProvider) {
-    $urlRouterProvider.otherwise("/home");
+    $urlRouterProvider.otherwise("/panel");
 
     $ocLazyLoadProvider.config({
         // Set to true if you want to see what and when is dynamically loaded
@@ -24,6 +24,12 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             templateUrl: "app/views/panel.html",
             controller: "panelCtrl",
             data: { pageTitle: 'Painel', specialClass: 'gray-bg' },
+        })
+        .state('lideres', {
+            url: "/lideres",
+            templateUrl: "app/views/lideres.html",
+            controller: "lideresCtrl",
+            data: { pageTitle: 'Lideres', specialClass: 'gray-bg' },
         })
         
 }

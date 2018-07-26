@@ -20,7 +20,7 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
                 $location.path('/panel');
                 break;
             case 'lideres':
-                $location.path('/login');
+                $location.path('/lideres');
                 break;
             case 'filiados':
                 $location.path('/login');

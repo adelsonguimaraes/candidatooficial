@@ -106,22 +106,12 @@ angular.module(module).service("authenticationAPI", function ($q, $location, $ro
 	// logout global
     $rootScope.logout = function () {
 
-    	if($rootScope.usuario) {
-        	$http({
-        		method: "POST",
-        		url: "rest/autoload.php",
-        		data: {metodo: "logout", class: "authentication"}
-        	}).then(function successCallback(response) {
-	        	if(response.data) {
-
-	        		window.sessionStorage.removeItem("usuario");
-	        		window.localStorage.removeItem("sessionCandidatoOficial");
-	        		$rootScope.usuario = "";
-					//delete $rootScope.menus;
-	        		$location.path("/home");
-	        	}
-	        });	
-        };
+		window.sessionStorage.removeItem("usuario");
+		window.localStorage.removeItem("sessionCandidatoOficial");
+		$rootScope.usuario = "";
+		
+		//delete $rootScope.menus;
+		$location.path("/home");
     }
 
     

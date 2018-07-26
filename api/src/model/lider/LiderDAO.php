@@ -106,7 +106,10 @@ Class LiderDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT * FROM lider";
+		$this->sql = "SELECT l.*, b.nome as 'bairro'
+		FROM lider l
+		inner join bairro b on b.id = l.idbairro";
+
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
