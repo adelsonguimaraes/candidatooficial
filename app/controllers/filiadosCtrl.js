@@ -116,4 +116,13 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             email: obj.email
         }
     }
+    $scope.upFile = function () {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.txt';
+        input.click();
+        input.addEventListener('change', function (e) {
+            console.log(e);
+        });
+    }
 });

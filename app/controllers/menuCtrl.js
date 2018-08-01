@@ -2,7 +2,7 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
     
     if ($rootScope.usuario) {
         $rootScope.menu = 'app/views/commons/';
-        $rootScope.menu += ($rootScope.usuario.idlider > 0) ? 'subheaderPanelLider.html' : 'subheaderPanel.html';
+        $rootScope.menu += ($rootScope.usuario.perfil > 'ADM') ? 'subheaderPanelLider.html' : 'subheaderPanel.html';
     }
     
     var activeMenu = function (item) {
