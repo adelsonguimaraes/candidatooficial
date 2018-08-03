@@ -12,7 +12,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         numero: null,
         complemento: null,
         cidade: null,
-        uf: null, 
+        uf: null,
         cep: null,
         localidade: null,
         celular: null,
@@ -119,11 +119,33 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     $scope.upFile = function () {
         var input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.zip';
-        input.click();
+        input.accept = '.txt';
+        input.click(); // simulando o click no botão
         // evento quando o usuário escolher o arquivo
         input.addEventListener('change', function (e) {
-            console.log(e);
+            var reader = new FileReader();
+            reader.onload = function (file) {
+                var base64 = file.target.result;
+
+                var data = {
+                    txt: base64
+                };
+
+                var dados = { 'session': true, 'metodo': 'scannearTxt', 'data': data, 'class': 'filiado' };
+
+                genericAPI.generic(dados)
+                    .then(function successCallback(response) {
+                        if (response.data.success) {
+                            console.log(response.data.data);
+                            
+                        } else {
+                            response.data.msg
+                            SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                        }
+                    }, function errorCallback(response) {
+                    });
+            }
+            reader.readAsDataURL(e.path[0].files[0]);
         });
     }
 });
