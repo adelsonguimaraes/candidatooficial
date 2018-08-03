@@ -119,8 +119,9 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     $scope.upFile = function () {
         var input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.txt';
+        input.accept = '.zip';
         input.click();
+        // evento quando o usuário escolher o arquivo
         input.addEventListener('change', function (e) {
             console.log(e);
         });
