@@ -20,25 +20,6 @@
 <body ng-controller="mainCtrl as main" class="{{$state.current.data.specialClass}}" landing-scrollspy id="page-top">
     <!-- Main view  -->
     <div ui-view></div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="modalLabel" ng-bind-html="modal.title"></h4>
-                </div>
-                <div class="modal-body" ng-bind-html="modal.content">
-                </div>
-                <div class="modal-footer" ng-bind-html="modal.rodape">
-                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
     <!-- Main Angular scripts-->
     <script src="api/libs/js/jquery/jquery-2.1.1.min.js"></script>
@@ -57,6 +38,7 @@
     <script src="api/libs/js/plugins/sweetalert/angular-sweetalert.min.js"></script>
 
     <script src="api/libs/js/MD5.js"></script>
+    <script src="api/libs/js/GenericModal.js"></script>
 
     <script src="app.js"></script>
     <script src="config.js"></script>
@@ -69,6 +51,7 @@
     <script src="app/controllers/panelCtrl.js"></script>
     <script src="app/controllers/lideresCtrl.js"></script>
     <script src="app/controllers/filiadosCtrl.js"></script>
+    <script src="app/controllers/filiadosdesistentesCtrl.js"></script>
     <script src="app/controllers/filiarCtrl.js"></script>
 
     <!-- services -->

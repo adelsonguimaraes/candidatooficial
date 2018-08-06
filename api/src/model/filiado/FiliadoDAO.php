@@ -80,6 +80,21 @@ Class FiliadoDAO {
 		return $this->superdao->getResponse();
 	}
 
+	function atualizarStatus ($id, $status) {
+		$obj = new Filiado($id);
+
+		$this->sql = "UPDATE filiado set status = '$status', dataedicao = now()  where id = $id";
+		$this->superdao->resetResponse();
+
+		if(!mysqli_query($this->con, $this->sql)) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'AtualizarStatus' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( true );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//buscarPorId
 	function buscarPorId (Filiado $obj) {
 		$this->sql = sprintf("SELECT * FROM filiado WHERE id = %d",
@@ -110,6 +125,7 @@ Class FiliadoDAO {
 			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'filiado', 'BuscarPorId' ) );
 		}else{
 			while($row = mysqli_fetch_assoc($result)) {
+				$row['checked'] = true;
 				$this->obj = $row;
 			}
 			$this->superdao->setSuccess( true );

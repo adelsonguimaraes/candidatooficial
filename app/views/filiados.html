@@ -13,6 +13,7 @@
                         <td>Nome</td>
                         <td>Bairro</td>
                         <td>Celular</td>
+                        <td>Status</td>
                         <td>Ações</td>
                     </tr>
                 </thead>
@@ -21,6 +22,7 @@
                         <td>{{obj.nome}}</td>
                         <td>{{obj.bairro}}</td>
                         <td>{{obj.celular | cel}}</td>
+                        <td>{{obj.status}}</td>
                         <td>
                             <div class="btna-group">
                                 <button class="btn btn-success btn-small" ng-click="edit(obj)">
@@ -88,3 +90,9 @@
         </form>
     </div>
 </div>
+
+<modal title="Filiados Desistentes" visible="true">
+    <div>
+        //type what ever the contents or elements you want
+    </div>
+</modal>

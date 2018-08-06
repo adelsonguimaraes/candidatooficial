@@ -27,6 +27,12 @@ Class FiliadoControl {
 	function cadastrar () {
 		return $this->objDAO->cadastrar($this->obj);
 	}
+	function atualizar () {
+		return $this->objDAO->atualizar($this->obj);
+	}
+	function atualizarStatus ($id, $status) {
+		return $this->objDAO->atualizarStatus($id, $status);
+	}
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
@@ -35,9 +41,6 @@ Class FiliadoControl {
 	}
 	function listar () {
 		return $this->objDAO->listar();
-	}
-	function atualizar () {
-		return $this->objDAO->atualizar($this->obj);
 	}
 	function deletar () {
 		return $this->objDAO->deletar($this->obj);

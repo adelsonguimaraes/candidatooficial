@@ -33,6 +33,9 @@ switch ($_POST['metodo']) {
 	case 'scannearTxt':
 		scannearTxt();
 		break;
+	case 'efetivarDesistentes':
+		efetivarDesistentes();
+		break;
 }
 
 function cadastrar () {
@@ -145,6 +148,16 @@ function ScannearTxt() {
 	$response['data'] = $contatos;
 	
 	echo json_encode($response);
+}
+
+function efetivarDesistentes () {
+	$data = $_POST['data'];
+	foreach ($data as $key) {
+		$control = new FiliadoControl();
+		$resp = $control->atualizarStatus($key['id'], 'DESISTENTE');
+		if ($resp['success'] === false) die (json_encode($resp));
+	}
+	echo json_encode($resp);
 }
 
 function utf16_2_utf8 ($str) {

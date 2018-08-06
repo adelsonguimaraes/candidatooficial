@@ -1,4 +1,4 @@
-angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert) {
+angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert, $uibModal) {
     if (!$rootScope.usuario) $location.path('/login');
 
     $scope.filiados = [];
@@ -137,7 +137,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                 genericAPI.generic(dados)
                     .then(function successCallback(response) {
                         if (response.data.success) {
-                            $scope.filiadosDesistentes = response.data.data;
+                            $rootScope.filiadosDesistentes = response.data.data;
                             $scope.showDesistentes();
                         } else {
                             response.data.msg
@@ -150,10 +150,11 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         });
     }
     $scope.showDesistentes = function () {
-        // console.log($scope.filiadosDesistentes);
-        $rootScope.modal.title = 'Filiados Desistentes';
-        $rootScope.modal.content = '';
-        // $rootScope.modal.footer = '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>';
-        $("#myModal").modal();
+        var modalInstance = $uibModal.open({
+            templateUrl: 'app/views/modal/filiadosdesistentes.html',
+            controller: 'filiadosdesistentesCtrl',
+            size: 'lg',
+            backdrop: 'static'
+        });
     }
 });

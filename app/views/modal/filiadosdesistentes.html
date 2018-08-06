@@ -1,0 +1,30 @@
+<div class="inmodal">
+    <div class="modal-header">
+        <h4 class="modal-title">Filiados Desistentes</h4>
+        <small class="font-bold">Selecione os filiados para efetivar a desistência no sistema.</small>
+    </div>
+    <div class="modal-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Nome</td>
+                    <td>Número</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="obj in filiadosDesistentes">
+                    <td>{{obj.nome}}</td>
+                    <td>{{obj.celular | cel}}</td>
+                    <td>
+                        <input type="checkbox" checked="obj.checked" ng-model="obj.checked">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="cancelar()">Cancelar</button>
+        <button type="button" class="btn btn-primary" ng-click="efetivar()">Efetivar</button>
+    </div>
+</div>

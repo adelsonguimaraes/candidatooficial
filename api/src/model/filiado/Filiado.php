@@ -24,6 +24,7 @@ Class Filiado implements JsonSerializable {
 	private $cep;
 	private $celular;
 	private $email;
+	private $status;
 	private $datacadastro;
 	private $dataedicao;
 
@@ -42,6 +43,7 @@ Class Filiado implements JsonSerializable {
 		$cep = NULL,
 		$celular = NULL,
 		$email = NULL,
+		$status = NULL,
 		$datacadastro = NULL,
 		$dataedicao = NULL
 	)
@@ -58,6 +60,7 @@ Class Filiado implements JsonSerializable {
 		$this->cep	= $cep;
 		$this->celular	= $celular;
 		$this->email	= $email;
+		$this->status = $status;
 		$this->datacadastro	= $datacadastro;
 		$this->dataedicao	= $dataedicao;
 	}
@@ -147,6 +150,13 @@ Class Filiado implements JsonSerializable {
 		$this->email = $email;
 		return $this;
 	}
+	public function getStatus() {
+		return $this->status;
+	}
+	public function setStatus($status) {
+		$this->status = $status;
+		return $this;
+	}
 	public function getDatacadastro() {
 		return $this->datacadastro;
 	}
@@ -177,6 +187,7 @@ Class Filiado implements JsonSerializable {
 			"cep"	=> $this->cep,
 			"celular"	=> $this->celular,
 			"email"	=> $this->email,
+			"status" => $this->status,
 			"datacadastro"	=> $this->datacadastro,
 			"dataedicao"	=> $this->dataedicao
 		];
