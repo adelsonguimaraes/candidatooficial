@@ -1,4 +1,12 @@
 angular.module(module).controller('campanhasCtrl', function ($rootScope, $scope, $location, genericAPI) {
     if (!$rootScope.usuario) $location.path('/login');
-    console.log('vamos criar uma campanha');
+    
+    $scope.novo = false;
+
+    $scope.clickNovo = function () {
+        $scope.novo = true;
+    }
+    $scope.cancelar = function () {
+        $scope.novo = false;
+    }
 });

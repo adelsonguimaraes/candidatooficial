@@ -95,7 +95,9 @@ footer {
     bottom:0;
     width: 100%;
 }
-
+.obrigatorio {
+    color: red;
+}
 
 @media (min-width: 1200px) {
     footer {
