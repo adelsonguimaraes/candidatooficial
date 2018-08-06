@@ -15,14 +15,15 @@ Class WppAPI {
         $api_url .= "&number=". urlencode ($number); 
         $api_url .= "&text=". urlencode ($msg); 
         $my_result_object = json_decode(file_get_contents($api_url, false)); 
-        echo "<br>Result: ". $my_result_object->success; 
-        echo "<br>Description: ". $my_result_object->description; 
-        echo "<br>Code: ". $my_result_object->result_code;
+        // echo "<br>Result: ". $my_result_object->success; 
+        // echo "<br>Description: ". $my_result_object->description; 
+        // echo "<br>Code: ". $my_result_object->result_code;
+        return $my_result_object;
     }
 }
 
-$wpp = new WppAPI();
-$wpp->send('+559293138892', 'Testando API do Whats App');
+// $wpp = new WppAPI();
+// $wpp->send('+559293138892', 'Testando API do Whats App');
 
 // return
 // Result: 1

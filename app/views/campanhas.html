@@ -36,32 +36,34 @@
             </table>
         </div>
     </div>
-    <div name="Form" style="padding:10px 20px; margin-bottom:40px;" ng-if="novo">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Nova Campanha</h3>
-                <div class="hr-line-dashed"></div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="label-control">Mensagem</label>
-                            <span class="obrigatorio">*</span>
-                            <textarea class="form-control" name="msg" cols="30" rows="10" ng-model="campanha.msg" ng-required></textarea>
+    <div if="form" style="padding:10px 20px; margin-bottom:40px;" ng-if="novo">
+        <form name="Form" class="form" novalidate>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Nova Campanha</h3>
+                    <div class="hr-line-dashed"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="label-control">Mensagem</label>
+                                <span class="obrigatorio">*</span>
+                                <textarea class="form-control" name="msg" cols="30" rows="10" ng-model="campanha.msg" ng-required="true"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group pull-right">
+                        <div class="btn-group">
+                            <button class="btn btn-success" type="button" ng-click="enviar(campanha)" ng-disabled="Form.$invalid">
+                                Salvar
+                            </button>
+                            <button class="btn btn-danger" type="button" ng-click="cancelar()">
+                                Cancelar
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="hr-line-dashed"></div>
-                <div class="form-group pull-right">
-                    <div class="btn-group">
-                        <button class="btn btn-success" type="button" ng-click="cadastrar(aluno)" ng-disabled="Form.$invalid">
-                            Salvar
-                        </button>
-                        <button class="btn btn-danger" type="button" ng-click="cancelar()">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
