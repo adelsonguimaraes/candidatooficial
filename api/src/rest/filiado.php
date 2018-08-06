@@ -106,6 +106,7 @@ function ScannearTxt() {
 		die (json_encode($response));
 	}
 
+	$contatos = [];
 	// laço para tratamento
 	foreach ($result[0] as $key) {
 		// quebrando a string
@@ -121,14 +122,43 @@ function ScannearTxt() {
 
 		// pegando usuário ou número
 		preg_match('/\S*\+?[\w\s]+\S*[^:]\ssaiu/', $key, $contato);
-		$contato = str_replace('\ssaiu', ' ', $contato[0]);
-		echo $contato;
+		$contato = trim(utf16_2_utf8($contato[0]));
+		$contato = preg_replace('/\s*saiu/', '',$contato); // remove saiu
+		$contato = preg_replace('/55/', '',$contato); // remove 55
+		// $contato = preg_replace('/\s*/', '',$contato); // remove espaços
+
+		// se for numero celular
+		if (preg_replace('/[\d\s]/', '', $contato) === '') {
+			$contato = preg_replace('/\s/', '', $contato);
+			$contato = substr($contato, 0, 2) . '9' . substr($contato, 2);
+		}
+		
+		$control = new FiliadoControl();
+		$resp = $control->buscarPorNomeNumero($contato);
+		if ($resp['success'] === false) die($resp); // se ocorrer um erro
+		
+		// se for encontrado o contato
+		if ($resp['data'] !== null) array_push($contatos, $resp['data']);
 	}
 
-	// $response['success'] = true;
-	// $response['data'] = $result[0];
-	// echo json_encode($response);
+	$response['success'] = true;
+	$response['data'] = $contatos;
+	
+	echo json_encode($response);
 }
+
+function utf16_2_utf8 ($str) {
+	$str = preg_replace('/[áàãâä]/ui', 'a', $str);
+    $str = preg_replace('/[éèêë]/ui', 'e', $str);
+    $str = preg_replace('/[íìîï]/ui', 'i', $str);
+    $str = preg_replace('/[óòõôö]/ui', 'o', $str);
+    $str = preg_replace('/[úùûü]/ui', 'u', $str);
+    $str = preg_replace('/[ç]/ui', 'c', $str);
+    // $str = preg_replace('/[,(),;:|!"#$%&/=?~^><ªº-]/', '_', $str);
+    $str = preg_replace('/[^a-z0-9]/i', ' ', $str);
+    // $str = preg_replace('/_+/', '', $str); // ideia do Bacco :)
+    return $str;
+} 
 
 
 // Classe gerada com BlackCoffeePHP 2.0 - by Adelson Guimarães

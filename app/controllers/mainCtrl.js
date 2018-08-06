@@ -5,6 +5,13 @@ function mainCtrl ($location, $rootScope, authenticationAPI, $uibModal) {
         nome: 'Marcel Alexandre',
         cargo: 'Deputado Federal'
     }
+
+    // modal
+    $rootScope.modal = {
+        title: 'My Modal',
+        content: 'My content',
+        rodape: '<button class="btn">Close</button>'
+     }
 }
 angular
     .module(module)

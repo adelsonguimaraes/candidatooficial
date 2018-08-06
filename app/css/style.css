@@ -54,6 +54,7 @@ header i {
     font-weight: bold;
     padding: 10px;
     background: #ffffff;
+    cursor: pointer;
     /* border-left: 1px solid #a3aab0; */
 }
 .subheader-menu a:hover {

@@ -100,6 +100,24 @@ Class FiliadoDAO {
 		return $this->superdao->getResponse();
 	}
 
+	function buscarPorNomeNumero ($n) {
+		$this->sql = "SELECT * from filiado where nome like '%$n%' or celular = '$n'";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'filiado', 'BuscarPorId' ) );
+		}else{
+			while($row = mysqli_fetch_assoc($result)) {
+				$this->obj = $row;
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->obj );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//listar
 	function listar () {
 		$this->sql = "SELECT f.*, b.nome as 'bairro'

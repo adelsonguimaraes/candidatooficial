@@ -8,7 +8,7 @@
 	Data Atual: 07/05/2017.
 */
 
-header('Content-type:application/json; charset=utf-8');
+// header('Content-type:application/json; charset=utf-8');
 
 /* Trata $_POST */
 if(!$_POST){ $_POST =  file_get_contents ( "php://input" ); }
