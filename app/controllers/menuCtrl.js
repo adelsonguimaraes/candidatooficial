@@ -8,27 +8,35 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
     var activeMenu = function (item) {
         var menus = document.querySelector('.subheader-menu');
         if (menus!==null) {
-            menus.querySelectorAll('a');
+            menus = menus.querySelectorAll('a');
             for (i in menus) {
                 if (menus[i] !== null && menus[i].tagName === 'A') {
                     menus[i].classList.remove('subheader-menu-active');
-                    if (menus[i].id === item) menus[i].classList.add('subheader-menu-active');
+                    if (menus[i].id === item) {
+                        menus[i].classList.add('subheader-menu-active');
+                    }
                 }
             }
         }
     }
-    activeMenu(window.location.hash.replace('#/',''));
+    activeMenu(window.location.hash.replace('#/', ''));
+    
+    if ("onhashchange" in window) {
+        window.addEventListener("hashchange", function (e) {
+            activeMenu(window.location.hash.replace('#/', ''));
+        });
+    }
 
 
     $scope.itemClick = function (item) {
-        activeMenu(item);
+        activeMenu(window.location.hash.replace('#/', ''));
 
         switch (item) {
             case 'home':
                 $location.path('/home');
                 break;
-            case 'campanha':
-                alert('Campanha');
+            case 'Sobre':
+                alert('Sobre');
                 // $location.path('/login');
                 break;
             case 'filiar':
@@ -46,6 +54,9 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
                 break;
             case 'filiados':
                 $location.path('/filiados');
+                break;
+            case 'campanhas':
+                $location.path('/campanhas');
                 break;
             case 'logout':
                 $rootScope.logout();

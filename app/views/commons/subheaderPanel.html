@@ -1,15 +1,18 @@
 <div class="subheader">
     <div class="subheader-menu" ng-controller="menuCtrl">
-        <a ng-click="itemClick('panel')">
+        <a id="panel" ng-click="itemClick('panel')">
             <i class="fa fa-area-chart"></i> Panel
         </a>
-        <a ng-click="itemClick('lideres')">
+        <a  id="lideres" ng-click="itemClick('lideres')">
             <i class="fa fa-user"></i> Lideres
         </a>
-        <a ng-click="itemClick('filiados')">
+        <a  id="filiados" ng-click="itemClick('filiados')">
             <i class="fa fa-users"></i> Filiados
         </a>
-        <a ng-click="itemClick('agenda')">
+        <a  id="campanhas" ng-click="itemClick('campanhas')">
+            <i class="fa fa-envelope"></i> Campanha
+        </a>
+        <a  id="agenda" ng-click="itemClick('agenda')">
             <i class="fa fa-calendar"></i> Agenda
         </a>
         <a ng-click="itemClick('logout')">
