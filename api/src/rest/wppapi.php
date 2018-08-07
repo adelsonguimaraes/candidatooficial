@@ -22,8 +22,24 @@ switch ($_POST['metodo']) {
 function enviar () {
     $data = $_POST['data'];
     $wpp = new WppAPI();
-    $response = $wpp->send('+559281440856', $data['msg']);
-    echo json_encode($response);
+
+    $numeros = array(
+        '9281440856', // Nilton
+        '9293138892', // samu
+        '9291764093', // dayane
+        '9291593335', // mae
+        '9292394535' // pai
+    );
+
+    $result = array('success'=>true, 'data'=>array());
+    foreach ($numeros as $key) {
+        $response = $wpp->send('+55'.$key, $data['msg']);
+        if ($response->success === false) die(json_encode($response));
+
+        array_push($result['data'], $response);
+    }
+
+    echo json_encode($result);
 
     // Result codes
     // Code 0: Message queued -  Mensagem enfileirada
