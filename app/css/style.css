@@ -99,6 +99,10 @@ footer {
     color: red;
 }
 
+area:a {
+    background: orange;
+}
+
 @media (min-width: 1200px) {
     footer {
         position: absolute;
