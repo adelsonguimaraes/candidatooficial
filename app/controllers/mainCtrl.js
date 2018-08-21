@@ -1,4 +1,4 @@
-function mainCtrl ($location, $rootScope, authenticationAPI, $uibModal) {
+function mainCtrl ($location, $rootScope, $scope, authenticationAPI, $uibModal) {
     // authenticationAPI.verificaSessao();
     authenticationAPI.sessionCtrl();
     $rootScope.candidato = {
@@ -12,6 +12,18 @@ function mainCtrl ($location, $rootScope, authenticationAPI, $uibModal) {
         content: 'My content',
         rodape: '<button class="btn">Close</button>'
      }
+
+    $rootScope.loading = 'none';
+
+    $rootScope.loadon = function () {
+        var load = document.getElementById('loading');
+        load.style.display = 'block';
+    }
+    $rootScope.loadoff = function () {
+        var load = document.getElementById('loading');
+        load.style.display = 'none';
+    }
+    
 }
 angular
     .module(module)

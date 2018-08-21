@@ -30,8 +30,14 @@ Class UsuarioControl {
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
+	function buscarUsuarios($busca) {
+		return $this->objDAO->buscarUsuarios($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
+	}
+	function setarLider ($id, $idlider) {
+		return $this->objDAO->setarLider ($id, $idlider);
 	}
 	function atualizar () {
 		return $this->objDAO->atualizar($this->obj);

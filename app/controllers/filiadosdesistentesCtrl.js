@@ -16,12 +16,16 @@ angular.module(module).controller('filiadosdesistentesCtrl', function ($rootScop
 
         var dados = { 'session': true, 'metodo': 'efetivarDesistentes', 'data': desistentes, 'class': 'filiado' };
 
+        $rootScope.loading = 'block';
+
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
+                    $rootScope.loading = 'none';
                     $uibModalInstance.dismiss('cancel'); // fecha a modal
                     SweetAlert.swal({ html: true, title: "Sucesso", text: "As atualizações foram efetivadas", type: "success" }); // avisa que deu tudo certo
                 } else {
+                    $rootScope.loading = 'none';
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {

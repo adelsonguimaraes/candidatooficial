@@ -21,6 +21,9 @@ switch ($_POST['metodo']) {
 	case 'buscarPorId':
 		buscarPorId();
 		break;
+	case 'buscarTipo':
+		buscarTipo();
+		break;
 	case 'listar':
 		listar();
 		break;
@@ -46,6 +49,12 @@ function buscarPorId () {
 	$data = $_POST['data'];
 	$control = new TipoliderControl(new Tipolider($data['id']));
 	$response = $control->buscarPorId();
+	echo json_encode($response);
+}
+function buscarTipo () {
+	$data = $_POST['data'];
+	$control = new TipoliderControl();
+	$response = $control->buscarTipo($data);
 	echo json_encode($response);
 }
 function listar () {

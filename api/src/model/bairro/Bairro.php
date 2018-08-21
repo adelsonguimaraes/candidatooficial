@@ -15,6 +15,7 @@ Class Bairro implements JsonSerializable {
 	private $id;
 	private $nome;
 	private $cep;
+	private $zona;
 	private $datacadastro;
 	private $dataedicao;
 
@@ -24,6 +25,7 @@ Class Bairro implements JsonSerializable {
 		$id = NULL,
 		$nome = NULL,
 		$cep = NULL,
+		$zona = NULL,
 		$datacadastro = NULL,
 		$dataedicao = NULL
 	)
@@ -31,6 +33,7 @@ Class Bairro implements JsonSerializable {
 		$this->id	= $id;
 		$this->nome	= $nome;
 		$this->cep	= $cep;
+		$this->zona = $zona;
 		$this->datacadastro	= $datacadastro;
 		$this->dataedicao	= $dataedicao;
 	}
@@ -57,6 +60,13 @@ Class Bairro implements JsonSerializable {
 		$this->cep = $cep;
 		return $this;
 	}
+	public function getZona() {
+		return $this->zona;
+	}
+	public function setZona($zona) {
+		$this->zona = $zona;
+		return $this;
+	}
 	public function getDatacadastro() {
 		return $this->datacadastro;
 	}
@@ -78,6 +88,7 @@ Class Bairro implements JsonSerializable {
 			"id"	=> $this->id,
 			"nome"	=> $this->nome,
 			"cep"	=> $this->cep,
+			"zona"  => $this->zona,
 			"datacadastro"	=> $this->datacadastro,
 			"dataedicao"	=> $this->dataedicao
 		];

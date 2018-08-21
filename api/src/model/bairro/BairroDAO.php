@@ -26,10 +26,11 @@ Class BairroDAO {
 
 	//cadastrar
 	function cadastrar (bairro $obj) {
-		$this->sql = sprintf("INSERT INTO bairro(nome, cep)
-		VALUES('%s', '%s')",
+		$this->sql = sprintf("INSERT INTO bairro(nome, cep, zona)
+		VALUES('%s', '%s', '%s')",
 			mysqli_real_escape_string($this->con, $obj->getNome()),
-			mysqli_real_escape_string($this->con, $obj->getCep()));
+			mysqli_real_escape_string($this->con, $obj->getCep()),
+			mysqli_real_escape_string($this->con, $obj->getZona()));
 
 		$this->superdao->resetResponse();
 
@@ -49,6 +50,7 @@ Class BairroDAO {
 		$this->sql = sprintf("UPDATE bairro SET nome = '%s', cep = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getNome()),
 			mysqli_real_escape_string($this->con, $obj->getCep()),
+			mysqli_real_escape_string($this->con, $obj->getZona()),
 			mysqli_real_escape_string($this->con, date('Y-m-d H:i:s')),
 			mysqli_real_escape_string($this->con, $obj->getId()));
 		$this->superdao->resetResponse();
@@ -78,6 +80,25 @@ Class BairroDAO {
 			}
 			$this->superdao->setSuccess( true );
 			$this->superdao->setData( $this->obj );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	//listar
+	function buscarBairro ($busca) {
+		$this->sql = "SELECT * FROM bairro where nome like '%$busca%'";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Bairro' , 'Listar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
 		}
 		return $this->superdao->getResponse();
 	}
@@ -120,6 +141,31 @@ Class BairroDAO {
 
 		return $this->superdao->getResponse();
 	}
+
+	//listar
+	function listarPorZona ($zona) {
+		$this->sql = "SELECT b.*, count(f.id) as 'qtdfiliados'
+		from bairro b
+		left join filiado f on f.idbairro = b.id";
+		if ($zona != 'tudo') $this->sql .= " where b.zona = '$zona'";
+		$this->sql .= " group by b.id
+		order by qtdfiliados desc, b.zona asc";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Bairro' , 'Listar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//deletar
 	function deletar (Bairro $obj) {
 		$this->superdao->resetResponse();

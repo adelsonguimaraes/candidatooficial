@@ -21,8 +21,14 @@ switch ($_POST['metodo']) {
 	case 'buscarPorId':
 		buscarPorId();
 		break;
+	case 'buscarLideres':
+		buscarLideres();
+		break;
 	case 'listar':
 		listar();
+		break;
+	case 'listarSemUsuario':
+		listarSemUsuario();
 		break;
 	case 'atualizar':
 		atualizar();
@@ -60,9 +66,20 @@ function buscarPorId () {
 	$response = $control->buscarPorId();
 	echo json_encode($response);
 }
+function buscarLideres () {
+	$data = $_POST['data'];
+	$control = new LiderControl();
+	$response = $control->buscarLideres($data);
+	echo json_encode($response);
+}
 function listar () {
 	$control = new LiderControl(new Lider);
 	$response = $control->listar();
+	echo json_encode($response);
+}
+function listarSemUsuario () {
+	$control = new LiderControl();
+	$response = $control->listarSemUsuario();
 	echo json_encode($response);
 }
 function atualizar () {

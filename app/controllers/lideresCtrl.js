@@ -1,4 +1,4 @@
-angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $location, genericAPI) {
+angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert) {
     if (!$rootScope.usuario) $location.path('/login');
 
     $scope.lideres = [];
@@ -14,7 +14,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
         cidade: null,
         uf: null, 
         cep: null,
-        localidade: null,
+        localidade: 'CIDADE',
         celular: null,
         email: null
     }
@@ -34,7 +34,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
             cidade: null,
             uf: null,
             cep: null,
-            localidade: null,
+            localidade: 'CIDADE',
             celular: null,
             email: null
         }
@@ -52,8 +52,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                     $scope.tiposlider = response.data.data;
                     $scope.obj.idtipolider = (response.data.data.length > 0) ? response.data.data[0].id : null;
                 } else {
-                    alert(response.data.msg);
-                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -63,13 +62,16 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
     $scope.listarLideres = function () {
         var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'lider' };
 
+        $rootScope.loading = 'block';
+
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
                     $scope.lideres = response.data.data;
+                    $rootScope.loading = 'none';
                 } else {
-                    alert(response.data.msg);
-                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    $rootScope.loading = 'none';
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -85,8 +87,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                     $scope.funcoes = response.data.data;
                     $scope.obj.idfuncao = (response.data.data.length > 0) ? response.data.data[0].id : null;
                 } else {
-                    alert(response.data.msg);
-                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -111,22 +112,33 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
     }
     listarBairros();
 
+    $scope.localidades = [
+        { value: 'CIDADE', descricao:'Cidade' },
+        { value: 'INTERIOR', descricao: 'Interior' },
+    ];
+    
     $scope.cadastrar = function (obj) {
+        
         if (obj.id > 0) {
             var dados = { 'session': true, 'metodo': 'atualizar', 'data': obj, 'class': 'lider' };
         } else {
             var dados = { 'session': true, 'metodo': 'cadastrar', 'data': obj, 'class': 'lider' };
         }
 
+        // tratando celular
+        obj.celular = obj.celular.replace(/[W]/g, '');
+
+        $rootScope.loading = 'block';
+        
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
+                    $rootScope.loading = 'none';
                     $scope.cancelar();
-                    // SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
-                    alert('Cadastrado com Sucesso');
+                    SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
                 } else {
-                    alert(response.data.msg);
-                    // SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                    $rootScope.loading = 'none';
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
             });
@@ -149,5 +161,34 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
             celular: obj.celular,
             email: obj.email
         }
+    }
+    $scope.busca = {
+        busca: ''
+    };
+    $scope.buscarLideres = function (obj) {
+        if (obj.busca === undefined) {
+            SweetAlert.swal({ html: true, title: "Atenção", text: 'Preencha o campo de busca corretamente.', type: "error" });
+            return false;
+        }
+
+        var dados = { 'session': true, 'metodo': 'buscarLideres', 'data': obj.busca, 'class': 'lider' };
+
+        $rootScope.loading = 'block';
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.lideres = response.data.data;
+                    $rootScope.loading = 'none';
+                } else {
+                    $rootScope.loading = 'none';
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    $scope.limparBusca = function () {
+        $scope.listarLideres();
+        $scope.busca.busca = '';
     }
 });

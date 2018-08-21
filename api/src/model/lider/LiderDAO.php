@@ -105,6 +105,29 @@ Class LiderDAO {
 	}
 
 	//listar
+	function buscarLideres ($busca) {
+		$this->sql = "SELECT l.*, b.nome as 'bairro'
+		FROM lider l
+		inner join bairro b on b.id = l.idbairro
+		where l.nome like '%$busca%' or l.celular = '$busca'";
+		
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lider' , 'Listar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	//listar
 	function listar () {
 		$this->sql = "SELECT l.*, b.nome as 'bairro'
 		FROM lider l
@@ -145,6 +168,28 @@ Class LiderDAO {
 
 		return $this->superdao->getResponse();
 	}
+
+	function listarSemUsuario () {
+		$this->sql = 'SELECT l.* from lider l
+		left join usuario u on u.idlider = l.id
+		where u.id is null';
+		$result = mysqli_query ( $this->con, $this->sql );
+
+		$this->superdao->resetResponse();
+
+		if ( !$result ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lider' , 'ListarPaginado' ) );
+		}else{
+			while ( $row = mysqli_fetch_assoc ( $result ) ) {				array_push( $this->lista, $row);
+			}
+
+			$this->superdao->setSuccess( true );			$this->superdao->setData( $this->lista );
+			$this->superdao->setTotal( $this->qtdTotal() );
+		}
+
+		return $this->superdao->getResponse();
+	}
+
 	//deletar
 	function deletar (Lider $obj) {
 		$this->superdao->resetResponse();

@@ -4,6 +4,13 @@
     <div id="grid" style="padding:10px 20px;">
         <div class="table-responsive" ng-if="!novo">
             <button class="btn btn-success" style="margin:10px 0px;" ng-click="clickNovo()">Novo</button>
+            <form style="display: flex;">
+                <div class="form-group" style="flex:1;">
+                    <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise por nome ou número">
+                </div>
+                <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarLideres(busca)" class="btn btn-default"><i class="fa fa-search"></i></button>
+                <button style="flex:0.01;height: 34px;" type="submit" ng-click="limparBusca()" class="btn btn-default"><i class="fa fa-times-circle"></i></button>
+            </form>
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -46,11 +53,16 @@
                 <select class="form-control" name="funcao" id="funcao" ng-model="obj.idfuncao" ng-options="obj.id as obj.descricao for obj in funcoes">
                 </select>
             </div>
+            <div class="form-group">
+                <label for="nome">Localidade:</label>
+                <select class="form-control" name="localidade" id="localidade" ng-model="obj.localidade" ng-options="obj.value as obj.descricao for obj in localidades">
+                </select>
+            </div>
             
             <!-- <h4>Contato</h4><hr> -->
             <div class="form-group">
                 <label for="nome">Celular:</label>
-                <input type="phone" class="form-control" id="celular" ng-model="obj.celular">
+                <input type="phone" data-mask="(99) 99999-9999" class="form-control" id="celular" ng-model="obj.celular">
             </div>
             <div class="form-group">
                 <label for="email">Email:</label>

@@ -34,11 +34,14 @@ angular.module(module).controller('campanhasCtrl', function ($rootScope, $scope,
     $scope.enviar = function (obj) {
         var dados = { 'session': true, 'metodo': 'enviar', 'data': obj, 'class': 'wppapi' };
 
+        $rootScope.loading = 'block';
+
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
                     console.log(response.data);
-                    // SweetAlert.swal({ html: true, title: "Sucesso", text: "A campanha foi enviada com sucesso!", type: "success" }); // avisa que deu tudo certo
+                    $rootScope.loading = 'none';
+                    SweetAlert.swal({ html: true, title: "Sucesso", text: "A campanha foi enviada com sucesso!", type: "success" }); // avisa que deu tudo certo
                 } else {
                     var msg = getCode(response.data.result_code);
                     SweetAlert.swal({ html: true, title: "Atenção", text: msg, type: "error" });

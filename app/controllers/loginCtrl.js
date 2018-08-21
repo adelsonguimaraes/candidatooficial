@@ -33,12 +33,16 @@ angular.module(module).controller('loginCtrl', function ($location, $rootScope, 
 
 		$scope.error = true;
 
+		$rootScope.loading = 'block';
+
 		authenticationAPI.genericAuthentication(data)
 		.then(function successCallback(response) {
 			if (response.data.success === true) {
 				authenticationAPI.createSession(response.data.data, false);
+				$rootScope.loading = 'none';
 				$location.path('/panel');
 			}else{
+				$rootScope.loading = 'none';
 				$scope.loginerror.error = true;
 				$scope.loginerror.msg = 'Login ou Senha inválidos';
 			}

@@ -1,7 +1,10 @@
 <div class="subheader">
-    <div class="subheader-menu" ng-controller="menuCtrl">
+    <div class="subheader-menu" style="overflow:auto;" ng-controller="menuCtrl">
         <a id="panel" ng-click="itemClick('panel')">
-            <i class="fa fa-area-chart"></i> Panel
+            <i class="fa fa-home"></i> Panel
+        </a>
+        <a id="zonas" ng-click="itemClick('zonas')">
+            <i class="fa fa-area-chart"></i> Zonas
         </a>
         <a  id="lideres" ng-click="itemClick('lideres')">
             <i class="fa fa-user"></i> Lideres
@@ -12,8 +15,20 @@
         <a  id="campanhas" ng-click="itemClick('campanhas')">
             <i class="fa fa-envelope"></i> Campanha
         </a>
-        <a  id="agenda" ng-click="itemClick('agenda')">
+        <!-- <a  id="agenda" ng-click="itemClick('agenda')">
             <i class="fa fa-calendar"></i> Agenda
+        </a> -->
+        <a id="tipolider" ng-click="itemClick('tipolider')">
+            <i class="fa fa-male"></i> Tipo&nbsp;Lider
+        </a>
+        <a id="bairro" ng-click="itemClick('bairro')">
+            <i class="glyphicon glyphicon-flag"></i> Bairro
+        </a>
+        <a id="funcao" ng-click="itemClick('funcao')">
+            <i class="glyphicon glyphicon-wrench"></i> Função
+        </a>
+        <a id="usuario" ng-click="itemClick('usuario')">
+            <i class="fa fa-user"></i> Usuário
         </a>
         <a ng-click="itemClick('logout')">
             <i class="fa fa-user-times"></i> Sair

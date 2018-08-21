@@ -47,10 +47,13 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     $scope.listarFiliados = function () {
         var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'filiado' };
 
+        $rootScope.loading = 'block';
+
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
                     $scope.filiados = response.data.data;
+                    $rootScope.loading = 'none';
                 } else {
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
@@ -68,7 +71,8 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                 if (response.data.success) {
                     $scope.bairros = response.data.data;
                     $scope.obj.idbairro = (response.data.data.length > 0) ? response.data.data[0].id : null;
-                } else {response.data.msg
+                } else {
+                    response.data.msg
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
@@ -83,16 +87,23 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             var dados = { 'session': true, 'metodo': 'cadastrar', 'data': obj, 'class': 'filiado' };
         }
 
+        // tratando celular
+        obj.celular = obj.celular.replace(/[W]/g, '');
+
         obj.idlider = $rootScope.usuario.idlider;
+
+        $rootScope.loading = 'block';
 
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
                     $scope.cancelar();
+                    $rootScope.loading = 'none';
                     SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
                     // alert('Cadastrado com Sucesso');
                 } else {
                     // alert(response.data.msg);
+                    $rootScope.loading = 'none';
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
@@ -132,15 +143,19 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                     txt: base64
                 };
 
+                $rootScope.loading = 'block';
+
                 var dados = { 'session': true, 'metodo': 'scannearTxt', 'data': data, 'class': 'filiado' };
 
                 genericAPI.generic(dados)
                     .then(function successCallback(response) {
                         if (response.data.success) {
+                            $rootScope.loading = 'none';
                             $rootScope.filiadosDesistentes = response.data.data;
                             $scope.showDesistentes();
                         } else {
-                            response.data.msg
+                            $scope.listarFiliados();
+                            $rootScope.loading = 'none';
                             SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                         }
                     }, function errorCallback(response) {
@@ -156,5 +171,35 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             size: 'lg',
             backdrop: 'static'
         });
+    }
+    $scope.busca = {
+        busca: ''
+    };
+    $scope.buscarFiliados = function (obj) {
+        if (obj.busca === undefined) {
+            SweetAlert.swal({ html: true, title: "Atenção", text: 'Preencha o campo de busca corretamente.', type: "error" });
+            return false;
+        }
+
+        var dados = { 'session': true, 'metodo': 'buscarFiliados', 'data': obj.busca, 'class': 'filiado' };
+
+        $rootScope.loading = 'block';
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.filiados = response.data.data;
+                    $rootScope.loading = 'none';
+                    // $scope.showDesistentes();
+                } else {
+                    $rootScope.loading = 'none';
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    $scope.limparBusca = function () {
+        $scope.listarFiliados();
+        $scope.busca.busca = '';
     }
 });

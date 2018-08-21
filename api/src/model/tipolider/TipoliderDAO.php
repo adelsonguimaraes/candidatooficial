@@ -79,6 +79,23 @@ Class TipoliderDAO {
 		}
 		return $this->superdao->getResponse();
 	}
+	function buscarTipo ($busca) {
+		$this->sql = "SELECT * FROM tipolider WHERE descricao like '%$busca%'";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'TipoLider', 'buscarPorTipo' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
 
 	//listar
 	function listar () {

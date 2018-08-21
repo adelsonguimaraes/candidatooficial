@@ -30,6 +30,9 @@ Class FuncaoControl {
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
+	function buscarFuncao ($busca) {
+		return $this->objDAO->buscarFuncao($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
 	}

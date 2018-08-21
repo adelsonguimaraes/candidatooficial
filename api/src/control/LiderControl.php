@@ -30,8 +30,14 @@ Class LiderControl {
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
+	function buscarLideres ($busca) {
+		return $this->objDAO->buscarLideres($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
+	}
+	function listarSemUsuario () {
+		return $this->objDAO->listarSemUsuario();
 	}
 	function atualizar () {
 		return $this->objDAO->atualizar($this->obj);

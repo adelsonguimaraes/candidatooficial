@@ -26,9 +26,8 @@ Class UsuarioDAO {
 
 	//cadastrar
 	function cadastrar (usuario $obj) {
-		$this->sql = sprintf("INSERT INTO usuario(idlider, usuario, senha, perfil)
-		VALUES(%d, '%s', '%s', '%s')",
-			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
+		$this->sql = sprintf("INSERT INTO usuario(usuario, senha, perfil)
+		VALUES('%s', '%s', '%s')",
 			mysqli_real_escape_string($this->con, $obj->getUsuario()),
 			mysqli_real_escape_string($this->con, $obj->getSenha()),
 			mysqli_real_escape_string($this->con, $obj->getPerfil()));
@@ -46,10 +45,22 @@ Class UsuarioDAO {
 		return $this->superdao->getResponse();
 	}
 
+	function setarLider ($id, $idlider) {
+		$this->sql = "UPDATE usuario set idlider = $idlider where id = $id";
+		$this->superdao->resetResponse();
+
+		if(!mysqli_query($this->con, $this->sql)) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Usuario', 'Atualizar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( true );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//atualizar
 	function atualizar (Usuario $obj) {
-		$this->sql = sprintf("UPDATE usuario SET idlider = %d, usuario = '%s', senha = '%s', perfil = '%s', dataedicao = '%s' WHERE id = %d ",
-			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
+		$this->sql = sprintf("UPDATE usuario SET usuario = '%s', senha = '%s', perfil = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getUsuario()),
 			mysqli_real_escape_string($this->con, $obj->getSenha()),
 			mysqli_real_escape_string($this->con, $obj->getPerfil()),
@@ -86,9 +97,32 @@ Class UsuarioDAO {
 		return $this->superdao->getResponse();
 	}
 
+	function buscarUsuarios($busca) {
+		$this->sql = "SELECT u.*, l.nome as lider
+		from usuario u
+		left join lider l on l.id = u.idlider
+		where u.usuario like '%$busca%' or l.nome like '%$busca%'";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Usuario' , 'buscarUsuarios' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//listar
 	function listar () {
-		$this->sql = "SELECT * FROM usuario";
+		$this->sql = "SELECT u.*, l.nome as lider
+		from usuario u
+		left join lider l on l.id = u.idlider";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();

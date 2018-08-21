@@ -30,8 +30,14 @@ Class BairroControl {
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
+	function buscarBairro($busca) {
+		return $this->objDAO->buscarBairro($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
+	}
+	function listarPorZona ($zona) {
+		return $this->objDAO->listarPorZona($zona);
 	}
 	function atualizar () {
 		return $this->objDAO->atualizar($this->obj);

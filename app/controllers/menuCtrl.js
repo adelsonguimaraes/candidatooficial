@@ -3,6 +3,8 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
     if ($rootScope.usuario) {
         $rootScope.menu = 'app/views/commons/';
         $rootScope.menu += ($rootScope.usuario.perfil > 'ADM') ? 'subheaderPanelLider.html' : 'subheaderPanel.html';
+    }else{
+        $rootScope.menu = '';
     }
     
     var activeMenu = function (item) {
@@ -49,6 +51,9 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
             case 'panel':
                 $location.path('/panel');
                 break;
+            case 'zonas':
+                $location.path('/zonas');
+                break;
             case 'lideres':
                 $location.path('/lideres');
                 break;
@@ -57,6 +62,18 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
                 break;
             case 'campanhas':
                 $location.path('/campanhas');
+                break;
+            case 'tipolider':
+                $location.path('/tipolider');
+                break;
+            case 'bairro':
+                $location.path('/bairro');
+                break;
+            case 'usuario':
+                $location.path('/usuario');
+                break;
+            case 'funcao':
+                $location.path('/funcao');
                 break;
             case 'logout':
                 $rootScope.logout();

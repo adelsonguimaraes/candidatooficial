@@ -30,6 +30,9 @@ Class TipoliderControl {
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
+	function buscarTipo ($busca) {
+		return $this->objDAO->buscarTipo($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
 	}

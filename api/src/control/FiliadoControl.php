@@ -39,6 +39,9 @@ Class FiliadoControl {
 	function buscarPorNomeNumero ($n) {
 		return $this->objDAO->buscarPorNomeNumero($n);
 	}
+	function buscarFiliados ($busca) {
+		return $this->objDAO->buscarFiliados($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
 	}

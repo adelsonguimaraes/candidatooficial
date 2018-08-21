@@ -21,8 +21,14 @@ switch ($_POST['metodo']) {
 	case 'buscarPorId':
 		buscarPorId();
 		break;
+	case 'buscarBairro':
+		buscarBairro();
+		break;
 	case 'listar':
 		listar();
+		break;
+	case 'listarPorZona':
+		listarPorZona();
 		break;
 	case 'atualizar':
 		atualizar();
@@ -37,7 +43,8 @@ function cadastrar () {
 	$obj = new Bairro(
 		NULL,
 		$data['nome'],
-		$data['cep']
+		$data['cep'],
+		$data['zona']
 	);
 	$control = new BairroControl($obj);
 	$response = $control->cadastrar();
@@ -49,9 +56,21 @@ function buscarPorId () {
 	$response = $control->buscarPorId();
 	echo json_encode($response);
 }
+function buscarBairro () {
+	$data = $_POST['data'];
+	$control = new BairroControl();
+	$response = $control->buscarBairro($data);
+	echo json_encode($response);
+}
 function listar () {
 	$control = new BairroControl(new Bairro);
 	$response = $control->listar();
+	echo json_encode($response);
+}
+function listarPorZona () {
+	$data = $_POST['data'];
+	$control = new BairroControl();
+	$response = $control->listarPorZona($data);
 	echo json_encode($response);
 }
 function atualizar () {
@@ -59,7 +78,8 @@ function atualizar () {
 	$obj = new Bairro(
 		$data['id'],
 		$data['nome'],
-		$data['cep']
+		$data['cep'],
+		$data['zona']
 	);
 	$control = new BairroControl($obj);
 	$response = $control->atualizar();

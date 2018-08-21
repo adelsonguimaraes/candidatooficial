@@ -21,6 +21,9 @@ switch ($_POST['metodo']) {
 	case 'buscarPorId':
 		buscarPorId();
 		break;
+	case 'buscarFuncao':
+		buscarFuncao();
+		break;
 	case 'listar':
 		listar();
 		break;
@@ -46,6 +49,12 @@ function buscarPorId () {
 	$data = $_POST['data'];
 	$control = new FuncaoControl(new Funcao($data['id']));
 	$response = $control->buscarPorId();
+	echo json_encode($response);
+}
+function buscarFuncao () {
+	$data = $_POST['data'];
+	$control = new FuncaoControl();
+	$response = $control->buscarFuncao($data);
 	echo json_encode($response);
 }
 function listar () {

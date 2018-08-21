@@ -134,6 +134,27 @@ Class FiliadoDAO {
 		return $this->superdao->getResponse();
 	}
 
+	function buscarFiliados ($busca) {
+		$this->sql = "SELECT f.*, b.nome as 'bairro'
+		FROM filiado f
+		inner join bairro b on b.id = f.idbairro
+		where f.nome like '%$busca%' or f.celular = '$busca'";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Filiado' , 'Listar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//listar
 	function listar () {
 		$this->sql = "SELECT f.*, b.nome as 'bairro'
