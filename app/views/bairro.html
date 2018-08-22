@@ -2,20 +2,17 @@
     <div ng-include="'app/views/commons/header.html'"></div>
     <div ng-include="menu" ng-controller="menuCtrl"></div>
     <div id="grid" style="padding:10px 20px;">
+        <button class="btn btn-success" style="margin:10px 0px;" ng-click="clickNovo()">Novo</button>
+        <form style="display: flex;">
+            <div class="form-group" style="flex:1;">
+                <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise nome bairro">
+            </div>
+            <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarBairro(busca)" class="btn btn-default"><i
+                    class="fa fa-search"></i></button>
+            <button style="flex:0.01;height: 34px;" type="submit" ng-click="limparBusca()" class="btn btn-default"><i
+                    class="fa fa-times-circle"></i></button>
+        </form>
         <div class="table-responsive" ng-if="!novo">
-            <button class="btn btn-success" style="margin:10px 0px;" ng-click="clickNovo()">Novo</button>
-            <button class="btn btn-default" style="margin:10px 0px;" title="Enviar Conversa" ng-click="upFile()">
-                <i class="fa fa-book"></i> Enviar Conversa
-            </button>
-            <form style="display: flex;">
-                <div class="form-group" style="flex:1;">
-                    <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise por nome ou número">
-                </div>
-                <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarBairro(busca)" class="btn btn-default"><i
-                        class="fa fa-search"></i></button>
-                <button style="flex:0.01;height: 34px;" type="submit" ng-click="limparBusca()" class="btn btn-default"><i
-                        class="fa fa-times-circle"></i></button>
-            </form>
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>

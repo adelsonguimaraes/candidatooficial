@@ -1,6 +1,18 @@
 angular.module(module).controller('zonasCtrl', function ($location, $rootScope, $scope, genericAPI, SweetAlert) {
     if (!$rootScope.usuario) $location.path('/login');
 
+    $scope.zonas = [
+        {value: 'tudo', descricao: 'Todas'},
+        {value: 'sul', descricao: 'Sul'},
+        {value: 'leste', descricao: 'Leste'},
+        {value: 'oeste', descricao: 'Oeste'},
+        {value: 'centro-sul', descricao: 'Centro-Sul'},
+        {value: 'centro-oeste', descricao: 'Centro-Oeste'}
+    ]
+    $scope.obj = {
+        zona: 'tudo'
+    };
+
     $scope.clickZona = function (zona) {
         var dados = { 'session': true, 'metodo': 'listarPorZona', 'data': zona, 'class': 'bairro' };
 
