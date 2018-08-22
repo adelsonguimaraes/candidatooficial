@@ -24,6 +24,7 @@ angular.module(module).controller('filiadosdesistentesCtrl', function ($rootScop
                     $rootScope.loading = 'none';
                     $uibModalInstance.dismiss('cancel'); // fecha a modal
                     SweetAlert.swal({ html: true, title: "Sucesso", text: "As atualizações foram efetivadas", type: "success" }); // avisa que deu tudo certo
+                    $rootScope.listarFiliados();
                 } else {
                     $rootScope.loading = 'none';
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });

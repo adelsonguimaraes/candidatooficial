@@ -1,16 +1,16 @@
 <?php
-// dao : lider
+// dao : lidergrupo
 
 /*
 	Projeto: Candidato Oficial.
 	Project Owner: .
 	Gerente de Projeto: Nilton Caldas Jr.
 	Desenvolvedor: Adelson Guimaraes.
-	Data de início: 19/07/2018.
-	Data Atual: 22/07/2018.
+	Data de início: 2018-07-19T13:15:29.263Z.
+	Data Atual: 22/08/2018.
 */
 
-Class LiderDAO {
+Class LidergrupoDAO {
 	//atributos
 	private $con;
 	private $sql;
@@ -21,26 +21,15 @@ Class LiderDAO {
 	//construtor
 	public function __construct($con) {
 		$this->con = $con;
-		$this->superdao = new SuperDAO('lider');
+		$this->superdao = new SuperDAO('lidergrupo');
 	}
 
 	//cadastrar
-	function cadastrar (lider $obj) {
-		$this->sql = sprintf("INSERT INTO lider(idtipolider, idfuncao, idbairro, nome, endereco, numero, complemento, cidade, uf, cep, localidade, celular, email)
-		VALUES(%d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	function cadastrar (lidergrupo $obj) {
+		$this->sql = sprintf("INSERT INTO lidergrupo(idlider, nome)
+		VALUES(%d, '%s')",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
-			mysqli_real_escape_string($this->con, $obj->getObjfuncao()->getId()),
-			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
-			mysqli_real_escape_string($this->con, $obj->getNome()),
-			mysqli_real_escape_string($this->con, $obj->getEndereco()),
-			mysqli_real_escape_string($this->con, $obj->getNumero()),
-			mysqli_real_escape_string($this->con, $obj->getComplemento()),
-			mysqli_real_escape_string($this->con, $obj->getCidade()),
-			mysqli_real_escape_string($this->con, $obj->getUf()),
-			mysqli_real_escape_string($this->con, $obj->getCep()),
-			mysqli_real_escape_string($this->con, $obj->getLocalidade()),
-			mysqli_real_escape_string($this->con, $obj->getCelular()),
-			mysqli_real_escape_string($this->con, $obj->getEmail()));
+			mysqli_real_escape_string($this->con, $obj->getNome()));
 
 		$this->superdao->resetResponse();
 
@@ -56,21 +45,10 @@ Class LiderDAO {
 	}
 
 	//atualizar
-	function atualizar (Lider $obj) {
-		$this->sql = sprintf("UPDATE lider SET idtipolider = %d, idfuncao = %d, idbairro = %d, nome = '%s', endereco = '%s', numero = '%s', complemento = '%s', cidade = '%s', uf = '%s', cep = '%s', localidade = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
+	function atualizar (Lidergrupo $obj) {
+		$this->sql = sprintf("UPDATE lidergrupo SET idlider = %d, nome = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
-			mysqli_real_escape_string($this->con, $obj->getObjfuncao()->getId()),
-			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),
-			mysqli_real_escape_string($this->con, $obj->getEndereco()),
-			mysqli_real_escape_string($this->con, $obj->getNumero()),
-			mysqli_real_escape_string($this->con, $obj->getComplemento()),
-			mysqli_real_escape_string($this->con, $obj->getCidade()),
-			mysqli_real_escape_string($this->con, $obj->getUf()),
-			mysqli_real_escape_string($this->con, $obj->getCep()),
-			mysqli_real_escape_string($this->con, $obj->getLocalidade()),
-			mysqli_real_escape_string($this->con, $obj->getCelular()),
-			mysqli_real_escape_string($this->con, $obj->getEmail()),
 			mysqli_real_escape_string($this->con, date('Y-m-d H:i:s')),
 			mysqli_real_escape_string($this->con, $obj->getId()));
 		$this->superdao->resetResponse();
@@ -85,8 +63,8 @@ Class LiderDAO {
 	}
 
 	//buscarPorId
-	function buscarPorId (Lider $obj) {
-		$this->sql = sprintf("SELECT * FROM lider WHERE id = %d",
+	function buscarPorId (Lidergrupo $obj) {
+		$this->sql = sprintf("SELECT * FROM lidergrupo WHERE id = %d",
 			mysqli_real_escape_string($this->con, $obj->getId()));
 		$result = mysqli_query($this->con, $this->sql);
 
@@ -105,20 +83,17 @@ Class LiderDAO {
 	}
 
 	//listar
-	function buscarLideres ($busca) {
-		$this->sql = "SELECT l.*, b.nome as 'bairro', count(f.id) as 'filiados'
-		FROM lider l
-		inner join bairro b on b.id = l.idbairro
-		inner join filiado f on f.idlider = l.id
-		where l.nome like '%$busca%' or l.celular = '$busca'
-		group by l.id";
-		
+	function buscarGrupo ($busca) {
+		$this->sql = "SELECT lg.*, l.nome as 'lider'
+		from lidergrupo lg
+		inner join lider l on l.id = lg.idlider
+		where lg.nome like '%$busca%'";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
 
 		if(!$result) {
-			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lider' , 'Listar' ) );
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lidergrupo' , 'Listar' ) );
 		}else{
 			while($row = mysqli_fetch_object($result)) {
 				array_push($this->lista, $row);
@@ -131,18 +106,15 @@ Class LiderDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT l.*, b.nome as 'bairro', count(f.id) as 'filiados'
-		FROM lider l
-		inner join bairro b on b.id = l.idbairro
-		inner join filiado f on f.idlider = l.id
-		group by l.id";
-
+		$this->sql = "SELECT lg.*, l.nome as 'lider'
+		from lidergrupo lg
+		inner join lider l on l.id = lg.idlider";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
 
 		if(!$result) {
-			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lider' , 'Listar' ) );
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lidergrupo' , 'Listar' ) );
 		}else{
 			while($row = mysqli_fetch_object($result)) {
 				array_push($this->lista, $row);
@@ -155,13 +127,13 @@ Class LiderDAO {
 
 	//listar paginado
 	function listarPaginado($start, $limit) {
-		$this->sql = "SELECT * FROM lider limit " . $start . ", " . $limit;
+		$this->sql = "SELECT * FROM lidergrupo limit " . $start . ", " . $limit;
 		$result = mysqli_query ( $this->con, $this->sql );
 
 		$this->superdao->resetResponse();
 
 		if ( !$result ) {
-			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lider' , 'ListarPaginado' ) );
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lidergrupo' , 'ListarPaginado' ) );
 		}else{
 			while ( $row = mysqli_fetch_assoc ( $result ) ) {				array_push( $this->lista, $row);
 			}
@@ -172,30 +144,8 @@ Class LiderDAO {
 
 		return $this->superdao->getResponse();
 	}
-
-	function listarSemUsuario () {
-		$this->sql = 'SELECT l.* from lider l
-		left join usuario u on u.idlider = l.id
-		where u.id is null';
-		$result = mysqli_query ( $this->con, $this->sql );
-
-		$this->superdao->resetResponse();
-
-		if ( !$result ) {
-			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lider' , 'ListarPaginado' ) );
-		}else{
-			while ( $row = mysqli_fetch_assoc ( $result ) ) {				array_push( $this->lista, $row);
-			}
-
-			$this->superdao->setSuccess( true );			$this->superdao->setData( $this->lista );
-			$this->superdao->setTotal( $this->qtdTotal() );
-		}
-
-		return $this->superdao->getResponse();
-	}
-
 	//deletar
-	function deletar (Lider $obj) {
+	function deletar (Lidergrupo $obj) {
 		$this->superdao->resetResponse();
 
 		// buscando por dependentes
@@ -205,7 +155,7 @@ Class LiderDAO {
 			return $this->superdao->getResponse();
 		}
 
-		$this->sql = sprintf("DELETE FROM lider WHERE id = %d",
+		$this->sql = sprintf("DELETE FROM lidergrupo WHERE id = %d",
 			mysqli_real_escape_string($this->con, $obj->getId()));
 		$result = mysqli_query($this->con, $this->sql);
 
@@ -222,7 +172,7 @@ Class LiderDAO {
 
 	//quantidade total
 	function qtdTotal() {
-		$this->sql = "SELECT count(*) as quantidade FROM lider";
+		$this->sql = "SELECT count(*) as quantidade FROM lidergrupo";
 		$result = mysqli_query ( $this->con, $this->sql );
 		if (! $result) {
 			die ( '[ERRO]: ' . mysqli_error ( $this->con ) );

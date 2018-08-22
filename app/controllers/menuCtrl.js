@@ -57,6 +57,9 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
             case 'lideres':
                 $location.path('/lideres');
                 break;
+            case 'grupos':
+                $location.path('/grupos');
+                break;
             case 'filiados':
                 $location.path('/filiados');
                 break;

@@ -126,7 +126,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
         }
 
         // tratando celular
-        obj.celular = obj.celular.replace(/[W]/g, '');
+        obj.celular = obj.celular.replace(/[\W]/g, '');
 
         $rootScope.loading = 'block';
         

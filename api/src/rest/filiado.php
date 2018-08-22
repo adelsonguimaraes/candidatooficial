@@ -27,6 +27,9 @@ switch ($_POST['metodo']) {
 	case 'listar':
 		listar();
 		break;
+	case 'listarPorLider':
+		listarPorLider();
+		break;
 	case 'atualizar':
 		atualizar();
 		break;
@@ -43,22 +46,30 @@ switch ($_POST['metodo']) {
 
 function cadastrar () {
 	$data = $_POST['data'];
-	$obj = new Filiado(
-		NULL,
-		new Bairro($data['idbairro']),
-		$data['nome'],
-		$data['datanascimento'],
-		$data['endereco'],
-		$data['numero'],
-		$data['complemento'],
-		$data['cidade'],
-		$data['uf'],
-		$data['cep'],
-		$data['celular'],
-		$data['email']
-	);
+	$obj = new Filiado();
+	$obj->setObjlider(new Lider($data['idlider']))
+		->setObjbairro(new Bairro($data['idbairro']))
+		->setNome($data['nome'])
+		->setDatanascimento($data['datanascimento'])
+		->setEndereco($data['endereco'])
+		->setNumero($data['numero'])
+		->setComplemento($data['complemento'])
+		->setCidade($data['cidade'])
+		->setUf($data['uf'])
+		->setCep($data['cep'])
+		->setCelular($data['celular'])
+		->setEmail($data['email']);
+
 	$control = new FiliadoControl($obj);
 	$response = $control->cadastrar();
+	if ($response['success'] === false) die (json_encode($response));
+	$idfiliado = $response['data'];
+
+	if (!empty($data['idliderbairro'])) {
+		$control = new FiliadoControl();
+		$response = $control->setIdLiderGrupo($idfiliado, $data['idliderbairro']);
+	}
+
 	echo json_encode($response);
 }
 function buscarPorId () {
@@ -78,24 +89,39 @@ function listar () {
 	$response = $control->listar();
 	echo json_encode($response);
 }
+function listarPorLider () {
+	$data = $_POST['data'];
+	$control = new FiliadoControl();
+	$response = $control->listarPorLider($data);
+	echo json_encode($response);
+}
 function atualizar () {
 	$data = $_POST['data'];
-	$obj = new Filiado(
-		$data['id'],
-		new Bairro($data['idbairro']),
-		$data['nome'],
-		$data['datanascimento'],
-		$data['endereco'],
-		$data['numero'],
-		$data['complemento'],
-		$data['cidade'],
-		$data['uf'],
-		$data['cep'],
-		$data['celular'],
-		$data['email']
-	);
+	$obj->setId($data['id'])
+		->setObjlider(new Lider($data['idlider']))
+		->setObjbairro(new Bairro($data['idbairro']))
+		->setNome($data['nome'])
+		->setDatanascimento($data['datanascimento'])
+		->setEndereco($data['endereco'])
+		->setNumero($data['numero'])
+		->setComplemento($data['complemento'])
+		->setCidade($data['cidade'])
+		->setUf($data['uf'])
+		->setCep($data['cep'])
+		->setCelular($data['celular'])
+		->setEmail($data['email']);
+
 	$control = new FiliadoControl($obj);
 	$response = $control->atualizar();
+
+	if ($response['success'] === false) die (json_encode($response));
+	$idfiliado = $data['id'];
+
+	if (!empty($data['idliderbairro'])) {
+		$control = new FiliadoControl();
+		$response = $control->setIdLiderGrupo($idfiliado, $data['idliderbairro']);
+	}
+
 	echo json_encode($response);
 }
 function deletar () {

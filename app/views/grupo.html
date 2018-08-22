@@ -5,26 +5,27 @@
         <button class="btn btn-success" style="margin:10px 0px;" ng-click="clickNovo()">Novo</button>
         <form style="display: flex;">
             <div class="form-group" style="flex:1;">
-                <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise por descrição">
+                <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise nome grupo">
             </div>
-            <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarFuncao(busca)" class="btn btn-default"><i
+            <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarGrupo(busca)" class="btn btn-default"><i
                     class="fa fa-search"></i></button>
-            <button style="flex:0.01;height: 34px;" type="submit" ng-click="limparBusca()" class="btn btn-default"><i
-                    class="fa fa-times-circle"></i></button>
+            <button style="flex:0.01;height: 34px;" type="submit" ng-click="limparBusca()" class="btn btn-default"><i class="fa fa-times-circle"></i></button>
         </form>
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <td>ID</td>
-                        <td>Descrição</td>
+                        <td>Nome</td>
+                        <td>Líder</td>
                         <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="obj in tipos">
+                    <tr ng-repeat="obj in grupos">
                         <td>{{obj.id}}</td>
-                        <td>{{obj.descricao}}</td>
+                        <td>{{obj.nome}}</td>
+                        <td>{{obj.lider}}</td>
                         <td>
                             <div class="btna-group">
                                 <button class="btn btn-success btn-small" ng-click="edit(obj)">
@@ -44,8 +45,13 @@
         <form>
             <input type="hidden" class="form-control" id="id" ng-model="obj.id">
             <div class="form-group">
-                <label for="descrição">Descrição:</label>
-                <input type="text" class="form-control" id="descricao" ng-model="obj.descricao">
+                <label for="lider">Lider:</label>
+                <select class="form-control" name="idlider" id="idlider" ng-model="obj.idlider" ng-options="obj.id as obj.nome for obj in lideres">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control" id="nome" ng-model="obj.nome">
             </div>
             <div class="btn-group pull-right">
                 <button class="btn btn-success" ng-click="cadastrar(obj)">Salvar</button>

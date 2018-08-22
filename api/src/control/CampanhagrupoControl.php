@@ -1,25 +1,25 @@
 <?php
-// control : filiado
+// control : campanhagrupo
 
 /*
 	Projeto: Candidato Oficial.
 	Project Owner: .
 	Gerente de Projeto: Nilton Caldas Jr.
 	Desenvolvedor: Adelson Guimaraes.
-	Data de início: 19/07/2018.
-	Data Atual: 22/07/2018.
+	Data de início: 2018-07-19T13:15:29.263Z.
+	Data Atual: 22/08/2018.
 */
 
-Class FiliadoControl {
+Class CampanhagrupoControl {
 	//atributos
 	protected $con;
 	protected $obj;
 	protected $objDAO;
 
 	//construtor
-	public function __construct(Filiado $obj=NULL) {
+	public function __construct(Campanhagrupo $obj=NULL) {
 		$this->con = Conexao::getInstance()->getConexao();
-		$this->objDAO = new FiliadoDAO($this->con);
+		$this->objDAO = new CampanhagrupoDAO($this->con);
 		$this->obj = $obj;
 	}
 
@@ -30,26 +30,11 @@ Class FiliadoControl {
 	function atualizar () {
 		return $this->objDAO->atualizar($this->obj);
 	}
-	function atualizarStatus ($id, $status) {
-		return $this->objDAO->atualizarStatus($id, $status);
-	}
-	function setIdLiderGrupo ($id, $idlidergrupo) {
-		return $this->objDAO->setIdLiderGrupo($id, $idlidergrupo);
-	}
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
-	function buscarPorNomeNumero ($n) {
-		return $this->objDAO->buscarPorNomeNumero($n);
-	}
-	function buscarFiliados ($busca) {
-		return $this->objDAO->buscarFiliados($busca);
-	}
 	function listar () {
 		return $this->objDAO->listar();
-	}
-	function listarPorLider ($idlider) {
-		return $this->objDAO->listarPorLider($idlider);
 	}
 	function deletar () {
 		return $this->objDAO->deletar($this->obj);

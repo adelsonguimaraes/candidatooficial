@@ -13,6 +13,8 @@
 Class Filiado implements JsonSerializable {
 	//atributos
 	private $id;
+	private $objlider;
+	private $objlidergrupo;
 	private $objbairro;
 	private $nome;
 	private $datanascimento;
@@ -32,6 +34,8 @@ Class Filiado implements JsonSerializable {
 	public function __construct
 	(
 		$id = NULL,
+		Lider $objlider = NULL,
+		Lidergrupo $objlidergrupo = NULL,
 		Bairro $objbairro = NULL,
 		$nome = NULL,
 		$datanascimento = NULL,
@@ -49,6 +53,8 @@ Class Filiado implements JsonSerializable {
 	)
 	{
 		$this->id	= $id;
+		$this->objlider = $objlider;
+		$this->objlidergrupo = $objlidergrupo;
 		$this->objbairro	= $objbairro;
 		$this->nome	= $nome;
 		$this->datanascimento	= $datanascimento;
@@ -71,6 +77,20 @@ Class Filiado implements JsonSerializable {
 	}
 	public function setId($id) {
 		$this->id = $id;
+		return $this;
+	}
+	public function getObjlider() {
+		return $this->objlider;
+	}
+	public function setObjlider($objlider) {
+		$this->objlider = $objlider;
+		return $this;
+	}
+	public function getObjlidergrupo() {
+		return $this->objlidergrupo;
+	}
+	public function setObjlidergrupo($objlidergrupo) {
+		$this->objlidergrupo = $objlidergrupo;
 		return $this;
 	}
 	public function getObjbairro() {
@@ -176,6 +196,8 @@ Class Filiado implements JsonSerializable {
 	public function JsonSerialize () {
 		return [
 			"id"	=> $this->id,
+			"objlider" => $this->objlider,
+			"objlidergrupo" => $this->objlidergrupo,
 			"objbairro"	=> $this->objbairro,
 			"nome"	=> $this->nome,
 			"datanascimento"	=> $this->datanascimento,

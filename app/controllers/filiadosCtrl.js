@@ -1,4 +1,4 @@
-angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert, $uibModal) {
+angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert, $uibModal, $timeout) {
     if (!$rootScope.usuario) $location.path('/login');
 
     $scope.filiados = [];
@@ -7,6 +7,8 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         id: null,
         idlider: null,
         idbairro: null,
+        idlidergrupo: null,
+        semgrupo: true,
         nome: null,
         datanascimento: null,
         endereco: null,
@@ -25,8 +27,10 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         $scope.novo = true;
         $scope.obj = {
             id: null,
-            idlider: null,
-            idbairro: $scope.bairros[0],
+            idlider: ($scope.lideres.length>0) ? $scope.lideres[0].id : null,
+            idbairro: ($scope.bairros.length>0) ? $scope.bairros[0].id : null,
+            idlidergrupo: ($scope.lidergrupos.length>0) ? $scope.lidergrupos[0].id : null,
+            semgrupo: true,
             nome: null,
             datanascimento: null,
             endereco: null,
@@ -44,7 +48,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         $scope.novo = false;
     }
 
-    $scope.listarFiliados = function () {
+    var listar = function () {
         var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'filiado' };
 
         $rootScope.loading = 'block';
@@ -60,8 +64,28 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             }, function errorCallback(response) {
             });
     }
-    $scope.listarFiliados();
+    var listarPorLider = function () {
+        var dados = { 'session': true, 'metodo': 'listarPorLider', 'data': $rootScope.usuario.idlider, 'class': 'filiado' };
 
+        $rootScope.loading = 'block';
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.filiados = response.data.data;
+                    $rootScope.loading = 'none';
+                } else {
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    if ($rootScope.usuario.idlider>0) {
+        $rootScope.listarFiliados = listarPorLider; // se logado como LIDER
+    }else{
+        $rootScope.listarFiliados = listar; // se logado como ADM
+    }
+    $rootScope.listarFiliados();
 
     var listarBairros = function () {
         var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'bairro' };
@@ -80,6 +104,40 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     }
     listarBairros();
 
+    var listarLideres = function () {
+        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'lider' };
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.lideres = response.data.data;
+                    $scope.obj.idlider = (response.data.data.length > 0) ? response.data.data[0].id : null;
+                } else {
+                    response.data.msg
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    listarLideres();
+
+    var listarLiderGrupos = function () {
+        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'lidergrupo' };
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.lidergrupos = response.data.data;
+                    $scope.obj.idlidergrupo = (response.data.data.length > 0) ? response.data.data[0].id : null;
+                } else {
+                    response.data.msg
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    listarLiderGrupos();
+
     $scope.cadastrar = function (obj) {
         if (obj.id > 0) {
             var dados = { 'session': true, 'metodo': 'atualizar', 'data': obj, 'class': 'filiado' };
@@ -88,9 +146,12 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         }
 
         // tratando celular
-        obj.celular = obj.celular.replace(/[W]/g, '');
+        obj.celular = obj.celular.replace(/[\W]/g, '');
 
-        obj.idlider = $rootScope.usuario.idlider;
+        if (obj.semgrupo) obj.idlidergrupo = null;
+        
+        // se logado como lider, geta o id lider
+        if ($rootScope.usuario.idlider>0) obj.idlider = $rootScope.usuario.idlider;
 
         $rootScope.loading = 'block';
 
@@ -100,6 +161,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                     $scope.cancelar();
                     $rootScope.loading = 'none';
                     SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
+                    $rootScope.listarFiliados();
                     // alert('Cadastrado com Sucesso');
                 } else {
                     // alert(response.data.msg);
@@ -154,7 +216,6 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                             $rootScope.filiadosDesistentes = response.data.data;
                             $scope.showDesistentes();
                         } else {
-                            $scope.listarFiliados();
                             $rootScope.loading = 'none';
                             SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                         }
@@ -171,6 +232,49 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             size: 'lg',
             backdrop: 'static'
         });
+    }
+    $scope.delete = function (obj) {
+        SweetAlert.swal({
+            title: "Deseja remover?",
+            text: "Os dados serão removidos do sistema!",
+            type: "warning",
+            showCancelButton: true,
+            html: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Sim, remova!",
+            cancelButtonText: "Não, cancele!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                swal.close();
+                if (isConfirm) {
+                    var dados = { 'session': true, 'metodo': 'deletar', 'data': obj, 'class': 'filiado' };
+
+                    $rootScope.loading = 'block';
+
+                    genericAPI.generic(dados)
+                        .then(function successCallback(response) {
+                            if (response.data.success) {
+                                $timeout(function () {
+                                    $rootScope.listarFiliados();
+                                    $rootScope.loading = 'none';
+                                    SweetAlert.swal("Removido!", "Essa informação foi removida.", "success");
+                                }, 100);
+                            } else {
+                                $timeout(function () {
+                                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                                    $rootScope.loading = 'none';
+                                }, 100);
+                            }
+                        }, function errorCallback(response) {
+                        });
+                } else {
+                    $timeout(function () {
+                        SweetAlert.swal("Cancelado", "A informação foi mantida :)", "error");
+                    }, 100);
+                }
+            });
     }
     $scope.busca = {
         busca: ''
@@ -199,7 +303,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             });
     }
     $scope.limparBusca = function () {
-        $scope.listarFiliados();
+        $rootScope.listarFiliados();
         $scope.busca.busca = '';
     }
 });

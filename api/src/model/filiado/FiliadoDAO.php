@@ -26,8 +26,9 @@ Class FiliadoDAO {
 
 	//cadastrar
 	function cadastrar (filiado $obj) {
-		$this->sql = sprintf("INSERT INTO filiado(idbairro, nome, datanascimento, endereco, numero, complemento, cidade, uf, cep, celular, email)
-		VALUES(%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+		$this->sql = sprintf("INSERT INTO filiado(idlider, idbairro, nome, datanascimento, endereco, numero, complemento, cidade, uf, cep, celular, email)
+		VALUES(%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),
 			mysqli_real_escape_string($this->con, $obj->getDatanascimento()),
@@ -55,7 +56,8 @@ Class FiliadoDAO {
 
 	//atualizar
 	function atualizar (Filiado $obj) {
-		$this->sql = sprintf("UPDATE filiado SET idbairro = %d, nome = '%s', datanascimento = '%s', endereco = '%s', numero = '%s', complemento = '%s', cidade = '%s', uf = '%s', cep = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
+		$this->sql = sprintf("UPDATE filiado SET idlider = %d, idbairro = %d, nome = '%s', datanascimento = '%s', endereco = '%s', numero = '%s', complemento = '%s', cidade = '%s', uf = '%s', cep = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
+			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),
 			mysqli_real_escape_string($this->con, $obj->getDatanascimento()),
@@ -73,6 +75,19 @@ Class FiliadoDAO {
 
 		if(!mysqli_query($this->con, $this->sql)) {
 			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( true );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	function setIdLiderGrupo ($id, $idlidergrupo) {
+		$this->sql = "UPDATE filiado set idlidergrupo = $idlidergrupo, dataedicao = now() where id = $id";
+		$this->superdao->resetResponse();
+
+		if(!mysqli_query($this->con, $this->sql)) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'setIdLiderGrupo' ) );
 		}else{
 			$this->superdao->setSuccess( true );
 			$this->superdao->setData( true );
@@ -135,9 +150,10 @@ Class FiliadoDAO {
 	}
 
 	function buscarFiliados ($busca) {
-		$this->sql = "SELECT f.*, b.nome as 'bairro'
+		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider'
 		FROM filiado f
 		inner join bairro b on b.id = f.idbairro
+		inner join lider l on l.id = f.idlider
 		where f.nome like '%$busca%' or f.celular = '$busca'";
 		$result = mysqli_query($this->con, $this->sql);
 
@@ -157,9 +173,33 @@ Class FiliadoDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT f.*, b.nome as 'bairro'
+		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider'
 		FROM filiado f
-		inner join bairro b on b.id = f.idbairro";
+		inner join bairro b on b.id = f.idbairro
+		inner join lider l on l.id = f.idlider";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if(!$result) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Filiado' , 'Listar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push($this->lista, $row);
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	//listar
+	function listarPorLider ($idlider) {
+		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider'
+		FROM filiado f
+		inner join bairro b on b.id = f.idbairro
+		inner join lider l on l.id = f.idlider
+		where l.id = $idlider";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();

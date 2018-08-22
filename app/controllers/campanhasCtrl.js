@@ -1,27 +1,5 @@
 angular.module(module).controller('campanhasCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert) {
     if (!$rootScope.usuario) $location.path('/login');
-    
-    var codes = [
-        { code: 0, description: 'Mensagem enfileirada' },
-        { code: -1, description: 'A chave da API não é válida' },
-        { code: -2, description: 'Faltam parâmetros na reuisição, verifique seu código' },
-        { code: -3, description: 'Você não pode enviar mensagens para este número, porque ele nunca escreveu para você.' },
-        { code: -5, description: 'Você não pode enviar mensagens para este número.' },
-        { code: -6, description: 'A chave da sua API não está pronta.' },
-        { code: -7, description: 'A chave da sua API está offline, verifique no painel.' },
-        { code: -8, description: 'Você precisa codificar o parâmetro TEXT com UTF-8.' },
-        { code: -9, description: 'Você não pode enviar Mensagem para sí mesmo.' }
-    ];
-
-    var getCode = function (code) {
-        var result = null;
-        for (var i in codes) {
-            if (codes[i].code === code) {
-                result = codes[i].description;
-            }
-        }
-        return result;
-    }
 
     $scope.novo = false;
 
