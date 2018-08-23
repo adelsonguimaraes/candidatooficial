@@ -102,10 +102,9 @@ Class CampanhagrupoDAO {
 	}
 
 	function listarGruposForaDaCampanha($idcampanha) {
-		$this->sql = "SELECT lg.*
+		$this->sql = "SELECT lg.* 
 		from lidergrupo lg
-		left join campanhagrupo cg on cg.idlidergrupo = lg.id
-		where cg.idcampanha != $idcampanha";
+		left join campanhagrupo cg on cg.idlidergrupo = lg.id and cg.idcampanha != $idcampanha";
 		
 		$result = mysqli_query($this->con, $this->sql);
 

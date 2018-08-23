@@ -89,7 +89,7 @@ function enviar () {
 
     foreach ($data['grupos'] as $key) {
         // getando grupo e chave
-        $lgControl = new LiderGrupoControl();
+        $lgControl = new LidergrupoControl();
         $response = $lgControl->listarFiliados($key['id']);
         if ($response['success'] === false) die(json_encode($response));
         $lista = $response['data'];
@@ -102,10 +102,10 @@ function enviar () {
             $response = $wpp->send($cel, $msg, $appkey);
         }
 
-        $control = new CampanhaGrupoControl(new CampanhaGrupo(
+        $control = new CampanhagrupoControl(new Campanhagrupo(
             NULL,
             new Campanha ($data['idcampanha']),
-            new LiderGrupo ($key['id'])
+            new Lidergrupo ($key['id'])
         ));
         $response = $control->cadastrar();
         if ($response['success']===false) die(json_encode($response));
