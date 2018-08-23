@@ -26,9 +26,10 @@ Class LidergrupoDAO {
 
 	//cadastrar
 	function cadastrar (lidergrupo $obj) {
-		$this->sql = sprintf("INSERT INTO lidergrupo(idlider, nome)
-		VALUES(%d, '%s')",
+		$this->sql = sprintf("INSERT INTO lidergrupo(idlider, idappkey, nome)
+		VALUES(%d, %d, '%s')",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
+			mysqli_real_escape_string($this->con, $obj->getObjappkey()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()));
 
 		$this->superdao->resetResponse();
@@ -46,8 +47,9 @@ Class LidergrupoDAO {
 
 	//atualizar
 	function atualizar (Lidergrupo $obj) {
-		$this->sql = sprintf("UPDATE lidergrupo SET idlider = %d, nome = '%s', dataedicao = '%s' WHERE id = %d ",
+		$this->sql = sprintf("UPDATE lidergrupo SET idlider = %d, idappkey = %d, nome = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
+			mysqli_real_escape_string($this->con, $obj->getObjappkey()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),
 			mysqli_real_escape_string($this->con, date('Y-m-d H:i:s')),
 			mysqli_real_escape_string($this->con, $obj->getId()));
@@ -106,9 +108,10 @@ Class LidergrupoDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT lg.*, l.nome as 'lider'
+		$this->sql = "SELECT lg.*, l.nome as 'lider', a.celular, a.appkey
 		from lidergrupo lg
-		inner join lider l on l.id = lg.idlider";
+		inner join lider l on l.id = lg.idlider
+		inner join appkey a on a.id = lg.idappkey";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
@@ -144,6 +147,31 @@ Class LidergrupoDAO {
 
 		return $this->superdao->getResponse();
 	}
+
+	function listarFiliados ($id) {
+		$this->sql = "SELECT f.*, app.appkey
+		from lidergrupo lg
+		inner join appkey app on app.id = lg.idappkey
+		inner join filiado f on f.idlidergrupo = lg.id
+		where lg.id = $id";
+		$result = mysqli_query ( $this->con, $this->sql );
+
+		$this->superdao->resetResponse();
+
+		if ( !$result ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'Lidergrupo' , 'listarFiliados' ) );
+		}else{
+			while ( $row = mysqli_fetch_assoc ( $result ) ) {				
+				array_push( $this->lista, $row);
+			}
+
+			$this->superdao->setSuccess( true );			$this->superdao->setData( $this->lista );
+			$this->superdao->setTotal( $this->qtdTotal() );
+		}
+
+		return $this->superdao->getResponse();
+	}
+
 	//deletar
 	function deletar (Lidergrupo $obj) {
 		$this->superdao->resetResponse();

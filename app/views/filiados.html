@@ -19,6 +19,7 @@
                     <tr>
                         <td>Nome</td>
                         <td ng-if="usuario.idlider===null">Líder</td>
+                        <td>Grupo</td>
                         <td>Bairro</td>
                         <td>Celular</td>
                         <td>Status</td>
@@ -29,6 +30,7 @@
                     <tr ng-repeat="obj in filiados">
                         <td>{{obj.nome}}</td>
                         <td ng-if="usuario.idlider===null">{{obj.lider}}</td>
+                        <td>{{obj.grupo}}</td>
                         <td>{{obj.bairro}}</td>
                         <td>{{obj.celular | cel}}</td>
                         <td>{{obj.status}}</td>

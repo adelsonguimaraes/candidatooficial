@@ -78,6 +78,9 @@ angular.module(module).controller('menuCtrl', function ($location, $rootScope, $
             case 'funcao':
                 $location.path('/funcao');
                 break;
+            case 'appkeys':
+                $location.path('/appkeys');
+                break;
             case 'logout':
                 $rootScope.logout();
                 break;

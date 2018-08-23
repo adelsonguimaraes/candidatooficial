@@ -14,6 +14,7 @@ Class Lidergrupo implements JsonSerializable {
 	//atributos
 	private $id;
 	private $objlider;
+	private $objappkey;
 	private $nome;
 	private $datacadastro;
 	private $dataedicao;
@@ -23,6 +24,7 @@ Class Lidergrupo implements JsonSerializable {
 	(
 		$id = NULL,
 		Lider $objlider = NULL,
+		Wpp $objappkey = NULL,
 		$nome = NULL,
 		$datacadastro = NULL,
 		$dataedicao = NULL
@@ -30,6 +32,7 @@ Class Lidergrupo implements JsonSerializable {
 	{
 		$this->id	= $id;
 		$this->objlider	= $objlider;
+		$this->objappkey = $objappkey;
 		$this->nome	= $nome;
 		$this->datacadastro	= $datacadastro;
 		$this->dataedicao	= $dataedicao;
@@ -48,6 +51,13 @@ Class Lidergrupo implements JsonSerializable {
 	}
 	public function setObjlider($objlider) {
 		$this->objlider = $objlider;
+		return $this;
+	}
+	public function getObjAppkey() {
+		return $this->objappkey;
+	}
+	public function setObjAppkey($objappkey) {
+		$this->objappkey = $objappkey;
 		return $this;
 	}
 	public function getNome() {
@@ -77,6 +87,8 @@ Class Lidergrupo implements JsonSerializable {
 		return [
 			"id"	=> $this->id,
 			"objlider"	=> $this->objlider,
+
+			"objappkey" => $this->objappkey,
 			"nome"	=> $this->nome,
 			"datacadastro"	=> $this->datacadastro,
 			"dataedicao"	=> $this->dataedicao

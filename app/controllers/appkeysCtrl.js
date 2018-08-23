@@ -1,12 +1,11 @@
-angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert, $uibModal, $timeout) {
+angular.module(module).controller('appkeysCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert, $uibModal, $timeout) {
     if (!$rootScope.usuario) $location.path('/login');
 
-    $scope.grupos = [];
+    $scope.appkeys = [];
     $scope.obj = {
         id: null,
-        idlider: null,
-        idappkey: null,
-        nome: null
+        celular: null,
+        wpp: null
     }
     $scope.novo = false;
 
@@ -14,60 +13,25 @@ angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $lo
         $scope.novo = true;
         $scope.obj = {
             id: null,
-            idlider: ($scope.lideres.length > 0) ? $scope.lideres[0].id : null,
-            idappkey: ($scope.appkeys.length > 0) ? $scope.appkeys[0].id : null,
-            nome: null
+            celular: null,
+            wpp: null
         }
     }
     $scope.cancelar = function () {
         $scope.novo = false;
     }
 
-    $scope.listarGrupos = function () {
-        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'lidergrupo' };
+    $scope.listarAppkeys = function () {
+        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'wppapi' };
 
         $rootScope.loading = 'block';
 
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
-                    $scope.grupos = response.data.data;
+                    $scope.appkeys = response.data.data;
                     $rootScope.loading = 'none';
                 } else {
-                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
-                }
-            }, function errorCallback(response) {
-            });
-    }
-    $scope.listarGrupos();
-
-    $scope.listarLideres = function () {
-        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'lider' };
-
-        genericAPI.generic(dados)
-            .then(function successCallback(response) {
-                if (response.data.success) {
-                    $scope.lideres = response.data.data;
-                    $scope.obj.idlider = (response.data.data.length > 0) ? response.data.data[0].id : null;
-                } else {
-                    response.data.msg
-                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
-                }
-            }, function errorCallback(response) {
-            });
-    }
-    $scope.listarLideres();
-
-    $scope.listarAppkeys = function () {
-        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'wppapi' };
-
-        genericAPI.generic(dados)
-            .then(function successCallback(response) {
-                if (response.data.success) {
-                    $scope.appkeys = response.data.data;
-                    $scope.obj.idappkey = (response.data.data.length > 0) ? response.data.data[0].id : null;
-                } else {
-                    response.data.msg
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
             }, function errorCallback(response) {
@@ -77,19 +41,22 @@ angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $lo
 
     $scope.cadastrar = function (obj) {
         if (obj.id > 0) {
-            var dados = { 'session': true, 'metodo': 'atualizar', 'data': obj, 'class': 'lidergrupo' };
+            var dados = { 'session': true, 'metodo': 'atualizar', 'data': obj, 'class': 'wppapi' };
         } else {
-            var dados = { 'session': true, 'metodo': 'cadastrar', 'data': obj, 'class': 'lidergrupo' };
+            var dados = { 'session': true, 'metodo': 'cadastrar', 'data': obj, 'class': 'wppapi' };
         }
 
         $rootScope.loading = 'block';
+
+        // tratando celular
+        obj.celular = obj.celular.replace(/[\W]/g, '');
 
         // tratando celular
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
                     $scope.cancelar();
-                    $scope.listarGrupos();
+                    $scope.listarAppkeys();
                     SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
                     $rootScope.loading = 'none';
                     // alert('Cadastrado com Sucesso');
@@ -104,9 +71,8 @@ angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $lo
         $scope.novo = true;
         $scope.obj = {
             id: obj.id,
-            idlider: obj.idlider,
-            idappkey: obj.idappkey,
-            nome: obj.nome
+            celular: obj.celular,
+            appkey: obj.appkey
         }
     }
     $scope.delete = function (obj) {
@@ -125,14 +91,14 @@ angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $lo
             function (isConfirm) {
                 swal.close();
                 if (isConfirm) {
-                    var dados = { 'session': true, 'metodo': 'deletar', 'data': obj, 'class': 'lidergrupo' };
+                    var dados = { 'session': true, 'metodo': 'deletar', 'data': obj, 'class': 'wppapi' };
 
                     $rootScope.loading = 'block';
 
                     genericAPI.generic(dados)
                         .then(function successCallback(response) {
                             if (response.data.success) {
-                                $scope.listarGrupos();
+                                $scope.listarAppkeys();
                                 $timeout(function () {
                                     $rootScope.loading = 'none';
                                     SweetAlert.swal("Removido!", "Essa informação foi removida.", "success");
@@ -155,20 +121,20 @@ angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $lo
     $scope.busca = {
         busca: ''
     };
-    $scope.buscarGrupo = function (obj) {
-        if (obj.busca === undefined) { 
+    $scope.buscarAppkey = function (obj) {
+        if (obj.busca === undefined) {
             SweetAlert.swal({ html: true, title: "Atenção", text: 'Preencha o campo de busca corretamente.', type: "error" });
             return false;
         }
 
-        var dados = { 'session': true, 'metodo': 'buscarGrupo', 'data': obj.busca, 'class': 'lidergrupo' };
+        var dados = { 'session': true, 'metodo': 'buscarAppkey', 'data': obj.busca, 'class': 'wppapi' };
 
         $rootScope.loading = 'block';
 
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
-                    $scope.grupos = response.data.data;
+                    $scope.appkeys = response.data.data;
                     $rootScope.loading = 'none';
                 } else {
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
@@ -177,7 +143,7 @@ angular.module(module).controller('grupoCtrl', function ($rootScope, $scope, $lo
             });
     }
     $scope.limparBusca = function () {
-        $scope.listarGrupos();
+        $scope.listarAppkeys();
         $scope.busca.busca = '';
     }
 });

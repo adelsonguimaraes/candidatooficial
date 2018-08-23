@@ -150,10 +150,11 @@ Class FiliadoDAO {
 	}
 
 	function buscarFiliados ($busca) {
-		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider'
+		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider', lg.nome as 'grupo'
 		FROM filiado f
 		inner join bairro b on b.id = f.idbairro
 		inner join lider l on l.id = f.idlider
+		left join lidergrupo lg on lg.id = f.idlidergrupo
 		where f.nome like '%$busca%' or f.celular = '$busca'";
 		$result = mysqli_query($this->con, $this->sql);
 
@@ -173,10 +174,11 @@ Class FiliadoDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider'
+		$this->sql = "SELECT f.*, b.nome as 'bairro', l.nome as 'lider', lg.nome as 'grupo'
 		FROM filiado f
 		inner join bairro b on b.id = f.idbairro
-		inner join lider l on l.id = f.idlider";
+		inner join lider l on l.id = f.idlider
+		left join lidergrupo lg on lg.id = f.idlidergrupo";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();

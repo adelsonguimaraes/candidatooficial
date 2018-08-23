@@ -65,9 +65,9 @@ function cadastrar () {
 	if ($response['success'] === false) die (json_encode($response));
 	$idfiliado = $response['data'];
 
-	if (!empty($data['idliderbairro'])) {
+	if (!empty($data['idlidergrupo'])) {
 		$control = new FiliadoControl();
-		$response = $control->setIdLiderGrupo($idfiliado, $data['idliderbairro']);
+		$response = $control->setIdLiderGrupo($idfiliado, $data['idlidergrupo']);
 	}
 
 	echo json_encode($response);
@@ -97,6 +97,7 @@ function listarPorLider () {
 }
 function atualizar () {
 	$data = $_POST['data'];
+	$obj = new Filiado();
 	$obj->setId($data['id'])
 		->setObjlider(new Lider($data['idlider']))
 		->setObjbairro(new Bairro($data['idbairro']))
@@ -117,9 +118,9 @@ function atualizar () {
 	if ($response['success'] === false) die (json_encode($response));
 	$idfiliado = $data['id'];
 
-	if (!empty($data['idliderbairro'])) {
+	if (!empty($data['idlidergrupo'])) {
 		$control = new FiliadoControl();
-		$response = $control->setIdLiderGrupo($idfiliado, $data['idliderbairro']);
+		$response = $control->setIdLiderGrupo($idfiliado, $data['idlidergrupo']);
 	}
 
 	echo json_encode($response);

@@ -43,7 +43,10 @@ Class LidergrupoControl {
 		return $this->objDAO->deletar($this->obj);
 	}
 	function listarPaginado ($start, $limit) {
-	return $this->objDAO->listarPaginado($start, $limit);
+		return $this->objDAO->listarPaginado($start, $limit);
+	}
+	function listarFiliados ($id) {
+		return $this->objDAO->listarFiliados($id);
 	}
 	function qtdTotal () {
 		return $this->objDAO->qtdTotal();

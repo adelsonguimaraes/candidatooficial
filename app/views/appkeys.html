@@ -5,9 +5,9 @@
         <button class="btn btn-success" style="margin:10px 0px;" ng-click="clickNovo()">Novo</button>
         <form style="display: flex;">
             <div class="form-group" style="flex:1;">
-                <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise nome grupo">
+                <input class="form-control" ng-model="busca.busca" size="50" type="text" placeholder="Pesquise nome bairro">
             </div>
-            <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarGrupo(busca)" class="btn btn-default"><i
+            <button style="flex:0.01;height: 34px;" type="submit" ng-click="buscarAppkey(busca)" class="btn btn-default"><i
                     class="fa fa-search"></i></button>
             <button style="flex:0.01;height: 34px;" type="submit" ng-click="limparBusca()" class="btn btn-default"><i class="fa fa-times-circle"></i></button>
         </form>
@@ -16,18 +16,16 @@
                 <thead>
                     <tr>
                         <td>ID</td>
-                        <td>Nome</td>
-                        <td>Líder</td>
-                        <td>App Key</td>
+                        <td>Celular</td>
+                        <td>Key</td>
                         <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="obj in grupos">
+                    <tr ng-repeat="obj in appkeys">
                         <td>{{obj.id}}</td>
-                        <td>{{obj.nome}}</td>
-                        <td>{{obj.lider}}</td>
-                        <td>{{obj.celular| cel}} - {{obj.appkey}}</td>
+                        <td>{{obj.celular | cel}}</td>
+                        <td>{{obj.appkey}}</td>
                         <td>
                             <div class="btna-group">
                                 <button class="btn btn-success btn-small" ng-click="edit(obj)">
@@ -47,18 +45,12 @@
         <form>
             <input type="hidden" class="form-control" id="id" ng-model="obj.id">
             <div class="form-group">
-                <label for="lider">Lider:</label>
-                <select class="form-control" name="idlider" id="idlider" ng-model="obj.idlider" ng-options="obj.id as obj.nome for obj in lideres">
-                </select>
+                <label for="celular">Celular:</label>
+                <input type="phone" data-mask="(99) 99999-9999" class="form-control" id="celular" ng-model="obj.celular">
             </div>
             <div class="form-group">
-                <label for="lider">App Key:</label>
-                <select class="form-control" name="idappkey" id="idappkey" ng-model="obj.idappkey" ng-options="obj.id as (obj.celular | cel) + ' - ' + obj.appkey  for obj in appkeys">
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" class="form-control" id="nome" ng-model="obj.nome">
+                <label for="nome">AppKey:</label>
+                <input type="text" class="form-control" id="appkey" ng-model="obj.appkey">
             </div>
             <div class="btn-group pull-right">
                 <button class="btn btn-success" ng-click="cadastrar(obj)">Salvar</button>

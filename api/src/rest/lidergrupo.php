@@ -40,6 +40,7 @@ function cadastrar () {
 	$obj = new Lidergrupo(
 		NULL,
 		new Lider($data['idlider']),
+		new Wpp($data['idappkey']),
 		$data['nome']
 	);
 	$control = new LidergrupoControl($obj);
@@ -68,6 +69,7 @@ function atualizar () {
 	$obj = new Lidergrupo(
 		$data['id'],
 		new Lider($data['idlider']),
+		new Wpp($data['idappkey']),
 		$data['nome']
 	);
 	$control = new LidergrupoControl($obj);

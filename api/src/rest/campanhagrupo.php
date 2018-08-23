@@ -24,6 +24,12 @@ switch ($_POST['metodo']) {
 	case 'listar':
 		listar();
 		break;
+	case 'listarPorCampanha':
+		listarPorCampanha();
+		break;
+	case 'listarGruposForaDaCampanha':
+		listarGruposForaDaCampanha();
+		break;
 	case 'atualizar':
 		atualizar();
 		break;
@@ -52,6 +58,18 @@ function buscarPorId () {
 function listar () {
 	$control = new CampanhagrupoControl(new Campanhagrupo);
 	$response = $control->listar();
+	echo json_encode($response);
+}
+function listarGruposForaDaCampanha () {
+	$data = $_POST['data'];
+	$control = new CampanhagrupoControl();
+	$response = $control->listarGruposForaDaCampanha($data);
+	echo json_encode($response);
+}
+function listarPorCampanha () {
+	$data = $_POST['data'];
+	$control = new CampanhagrupoControl();
+	$response = $control->listarPorCampanha($data);
 	echo json_encode($response);
 }
 function atualizar () {

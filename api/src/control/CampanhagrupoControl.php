@@ -36,6 +36,12 @@ Class CampanhagrupoControl {
 	function listar () {
 		return $this->objDAO->listar();
 	}
+	function listarGruposForaDaCampanha($idcampanha) {
+		return $this->objDAO->listarGruposForaDaCampanha($idcampanha);
+	}
+	function listarPorCampanha($idcampanha) {
+		return $this->objDAO->listarPorCampanha($idcampanha);
+	}
 	function deletar () {
 		return $this->objDAO->deletar($this->obj);
 	}

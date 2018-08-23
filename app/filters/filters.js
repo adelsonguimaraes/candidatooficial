@@ -2,6 +2,14 @@
 	Filtros
 */
 
+
+function string30() {
+    return function (input) {
+        input = input.substring(0, 30);
+        return input;
+    }
+};
+
 function nomeProprio() {
     return function (input) {
         return input;
@@ -91,6 +99,7 @@ function real() {
 
 angular
     .module(module)
+    .filter('string30', string30)
     .filter('nomeProprio', nomeProprio)
     .filter('cpf', cpf)
     .filter('cnpj', cnpj)
