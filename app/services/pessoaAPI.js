@@ -1,5 +1,5 @@
-angular.module('admin-spe').service("pessoaAPI", function ($scope, $http) {
-	function _trataCampo(scope) {
+// angular.module('admin-spe').service("pessoaAPI", function ($scope, $http) {
+// 	function _trataCampo(scope) {
 
-	}
-})
+// 	}
+// })
