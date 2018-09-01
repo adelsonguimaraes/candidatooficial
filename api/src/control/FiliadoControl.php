@@ -45,6 +45,9 @@ Class FiliadoControl {
 	function buscarFiliados ($busca) {
 		return $this->objDAO->buscarFiliados($busca);
 	}
+	function buscarFiliadosViaLider ($busca, $idlider) {
+		return $this->objDAO->buscarFiliadosViaLider ($busca, $idlider);
+	}
 	function listar () {
 		return $this->objDAO->listar();
 	}

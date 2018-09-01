@@ -285,16 +285,26 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             return false;
         }
 
-        var dados = { 'session': true, 'metodo': 'buscarFiliados', 'data': obj.busca, 'class': 'filiado' };
+        var data = {
+            busca: obj.busca,
+            idlider: ''
+        }
 
+        if ($rootScope.usuario.idlider>0) {
+            data.idlider = $rootScope.usuario.idlider;
+            var dados = { 'session': true, 'metodo': 'buscarFiliadosViaLider', 'data': data, 'class': 'filiado' };
+        }else{
+            var dados = { 'session': true, 'metodo': 'buscarFiliados', 'data': data, 'class': 'filiado' };
+        }
+        
         $rootScope.loading = 'block';
 
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
+                    if (response.data.data.length<=0) SweetAlert.swal({ html: true, title: "Atenção", text: 'Nenhum Resultado foi encontrado.', type: "error" });
                     $scope.filiados = response.data.data;
                     $rootScope.loading = 'none';
-                    // $scope.showDesistentes();
                 } else {
                     $rootScope.loading = 'none';
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });

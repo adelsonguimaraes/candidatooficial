@@ -24,6 +24,9 @@ switch ($_POST['metodo']) {
 	case 'buscarFiliados':
 		buscarFiliados();
 		break;
+	case 'buscarFiliadosViaLider':
+		buscarFiliadosViaLider();
+		break;
 	case 'listar':
 		listar();
 		break;
@@ -81,7 +84,13 @@ function buscarPorId () {
 function buscarFiliados () {
 	$data = $_POST['data'];
 	$control = new FiliadoControl();
-	$response = $control->buscarFiliados($data);
+	$response = $control->buscarFiliados($data['busca']);
+	echo json_encode($response);
+}
+function buscarFiliadosViaLider () {
+	$data = $_POST['data'];
+	$control = new FiliadoControl();
+	$response = $control->buscarFiliadosViaLider($data['busca'], $data['idlider']);
 	echo json_encode($response);
 }
 function listar () {

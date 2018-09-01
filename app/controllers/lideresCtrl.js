@@ -24,9 +24,9 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
         $scope.novo = true;
         $scope.obj = {
             id: null,
-            idtipolider: $scope.tiposlider[0].id,
-            idfuncao: $scope.funcoes[0].id,
-            idbairro: $scope.bairros[0],
+            idtipolider: ($scope.tiposlider.length > 0) ? $scope.tiposlider[0].id : null,
+            idfuncao: ($scope.funcoes.length > 0) ? $scope.funcoes[0].id : null,
+            idbairro: ($scope.bairros.length > 0) ? $scope.bairros[0].id : null,
             nome: null,
             endereco: null,
             numero: null,
@@ -135,6 +135,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
                 if (response.data.success) {
                     $rootScope.loading = 'none';
                     $scope.cancelar();
+                    $scope.listarLideres();
                     SweetAlert.swal("Sucesso!", "Sucesso na operação!", "success");
                 } else {
                     $rootScope.loading = 'none';
@@ -178,6 +179,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
+                    if (response.data.data.length<=0) SweetAlert.swal({ html: true, title: "Atenção", text: 'Nenhum Resultado foi encontrado.', type: "error" });
                     $scope.lideres = response.data.data;
                     $rootScope.loading = 'none';
                 } else {

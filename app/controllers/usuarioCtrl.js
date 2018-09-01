@@ -168,8 +168,8 @@ angular.module(module).controller('usuarioCtrl', function ($rootScope, $scope, $
         genericAPI.generic(dados)
             .then(function successCallback(response) {
                 if (response.data.success) {
+                    if (response.data.data.length<=0) SweetAlert.swal({ html: true, title: "Atenção", text: 'Nenhum Resultado foi encontrado.', type: "error" });
                     $scope.usuarios = response.data.data;
-                    // $scope.showDesistentes();
                 } else {
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }

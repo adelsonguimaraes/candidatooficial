@@ -134,7 +134,7 @@ Class LiderDAO {
 		$this->sql = "SELECT l.*, b.nome as 'bairro', count(f.id) as 'filiados'
 		FROM lider l
 		inner join bairro b on b.id = l.idbairro
-		inner join filiado f on f.idlider = l.id
+		left join filiado f on f.idlider = l.id
 		group by l.id";
 
 		$result = mysqli_query($this->con, $this->sql);

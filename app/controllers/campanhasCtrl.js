@@ -170,6 +170,7 @@ angular.module(module).controller('campanhasCtrl', function ($rootScope, $scope,
                 if (response.data.success) {
                     $scope.bairros = response.data.data;
                     $rootScope.loading = 'none';
+                    if (response.data.data.length<=0) SweetAlert.swal({ html: true, title: "Atenção", text: 'Nenhum Resultado foi encontrado.', type: "error" });
                 } else {
                     SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
                 }
