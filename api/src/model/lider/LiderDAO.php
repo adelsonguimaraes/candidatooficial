@@ -27,7 +27,7 @@ Class LiderDAO {
 	//cadastrar
 	function cadastrar (lider $obj) {
 		$this->sql = sprintf("INSERT INTO lider(idtipolider, idfuncao, idbairro, nome, endereco, numero, complemento, cidade, uf, cep, localidade, celular, email)
-		VALUES(%d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+		VALUES(%d, %d, %d, upper('%s'), upper('%s'), '%s', upper('%s)', upper('%s'), upper('%s'), '%s', '%s', '%s', '%s')",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjfuncao()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
@@ -57,7 +57,7 @@ Class LiderDAO {
 
 	//atualizar
 	function atualizar (Lider $obj) {
-		$this->sql = sprintf("UPDATE lider SET idtipolider = %d, idfuncao = %d, idbairro = %d, nome = '%s', endereco = '%s', numero = '%s', complemento = '%s', cidade = '%s', uf = '%s', cep = '%s', localidade = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
+		$this->sql = sprintf("UPDATE lider SET idtipolider = %d, idfuncao = %d, idbairro = %d, nome = upper('%s'), endereco = upper('%s'), numero = '%s', complemento = upper('%s'), cidade = upper('%s'), uf = upper('%s'), cep = '%s', localidade = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjfuncao()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),

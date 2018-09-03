@@ -27,7 +27,7 @@ Class LidergrupoDAO {
 	//cadastrar
 	function cadastrar (lidergrupo $obj) {
 		$this->sql = sprintf("INSERT INTO lidergrupo(idlider, idappkey, nome)
-		VALUES(%d, %d, '%s')",
+		VALUES(%d, %d, upper('%s'))",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjappkey()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()));
@@ -47,7 +47,7 @@ Class LidergrupoDAO {
 
 	//atualizar
 	function atualizar (Lidergrupo $obj) {
-		$this->sql = sprintf("UPDATE lidergrupo SET idlider = %d, idappkey = %d, nome = '%s', dataedicao = '%s' WHERE id = %d ",
+		$this->sql = sprintf("UPDATE lidergrupo SET idlider = %d, idappkey = %d, nome = upper('%s'), dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjappkey()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),

@@ -27,7 +27,7 @@ Class FiliadoDAO {
 	//cadastrar
 	function cadastrar (filiado $obj) {
 		$this->sql = sprintf("INSERT INTO filiado(idlider, idbairro, nome, datanascimento, endereco, numero, complemento, cidade, uf, cep, celular, email)
-		VALUES(%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+		VALUES(%d, %d, upper('%s'), '%s', upper('%s'), '%s', upper('%s'), upper('%s'), upper('%s'), '%s', '%s', '%s')",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),
@@ -56,7 +56,7 @@ Class FiliadoDAO {
 
 	//atualizar
 	function atualizar (Filiado $obj) {
-		$this->sql = sprintf("UPDATE filiado SET idlider = %d, idbairro = %d, nome = '%s', datanascimento = '%s', endereco = '%s', numero = '%s', complemento = '%s', cidade = '%s', uf = '%s', cep = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
+		$this->sql = sprintf("UPDATE filiado SET idlider = %d, idbairro = %d, nome = upper('%s'), datanascimento = '%s', endereco = upper('%s'), numero = '%s', complemento = upper('%s'), cidade = upper('%s'), uf = upper('%s'), cep = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getNome()),
