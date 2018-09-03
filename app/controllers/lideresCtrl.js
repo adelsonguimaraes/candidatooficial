@@ -1,4 +1,4 @@
-angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert) {
+angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $location, genericAPI, SweetAlert, $timeout) {
     if (!$rootScope.usuario) $location.path('/login');
 
     $scope.lideres = [];
@@ -162,6 +162,49 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
             celular: obj.celular,
             email: obj.email
         }
+    }
+    $scope.delete = function (obj) {
+        SweetAlert.swal({
+            title: "Deseja remover?",
+            text: "Os dados serão removidos do sistema!",
+            type: "warning",
+            showCancelButton: true,
+            html: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Sim, remova!",
+            cancelButtonText: "Não, cancele!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                swal.close();
+                if (isConfirm) {
+                    var dados = { 'session': true, 'metodo': 'deletar', 'data': obj, 'class': 'lider' };
+
+                    $rootScope.loading = 'block';
+
+                    genericAPI.generic(dados)
+                        .then(function successCallback(response) {
+                            if (response.data.success) {
+                                $timeout(function () {
+                                    $scope.listarLideres();
+                                    $rootScope.loading = 'none';
+                                    SweetAlert.swal("Removido!", "Essa informação foi removida.", "success");
+                                }, 100);
+                            } else {
+                                $timeout(function () {
+                                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                                    $rootScope.loading = 'none';
+                                }, 100);
+                            }
+                        }, function errorCallback(response) {
+                        });
+                } else {
+                    $timeout(function () {
+                        SweetAlert.swal("Cancelado", "A informação foi mantida :)", "error");
+                    }, 100);
+                }
+            });
     }
     $scope.busca = {
         busca: ''

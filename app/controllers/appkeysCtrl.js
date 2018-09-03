@@ -7,10 +7,10 @@ angular.module(module).controller('appkeysCtrl', function ($rootScope, $scope, $
         celular: null,
         wpp: null
     }
-    $scope.novo = false;
+    $scope.view = 1; // 1. Grid 2. Form 3. APIWHA
 
     $scope.clickNovo = function () {
-        $scope.novo = true;
+        $scope.view = 2; // form
         $scope.obj = {
             id: null,
             celular: null,
@@ -18,7 +18,7 @@ angular.module(module).controller('appkeysCtrl', function ($rootScope, $scope, $
         }
     }
     $scope.cancelar = function () {
-        $scope.novo = false;
+        $scope.view = 1; // grid
     }
 
     $scope.listarAppkeys = function () {
@@ -68,7 +68,7 @@ angular.module(module).controller('appkeysCtrl', function ($rootScope, $scope, $
             });
     }
     $scope.edit = function (obj) {
-        $scope.novo = true;
+        $scope.view = 2; // form
         $scope.obj = {
             id: obj.id,
             celular: obj.celular,
@@ -145,5 +145,11 @@ angular.module(module).controller('appkeysCtrl', function ($rootScope, $scope, $
     $scope.limparBusca = function () {
         $scope.listarAppkeys();
         $scope.busca.busca = '';
+    }
+    $scope.whatspanel = function () {
+        $scope.view = 3; // api panel
+    }
+    $scope.whatspanelcancel = function () {
+        $scope.view = 1; // api panel
     }
 });
