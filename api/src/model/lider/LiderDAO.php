@@ -27,7 +27,7 @@ Class LiderDAO {
 	//cadastrar
 	function cadastrar (lider $obj) {
 		$this->sql = sprintf("INSERT INTO lider(idtipolider, idfuncao, idbairro, nome, endereco, numero, complemento, cidade, uf, cep, localidade, celular, email)
-		VALUES(%d, %d, %d, upper('%s'), upper('%s'), '%s', upper('%s)', upper('%s'), upper('%s'), '%s', '%s', '%s', '%s')",
+		VALUES(%d, %d, %d, upper('%s'), upper('%s'), '%s', upper('%s'), upper('%s'), upper('%s'), '%s', '%s', '%s', '%s')",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjfuncao()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
