@@ -138,6 +138,28 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     }
     listarLiderGrupos();
 
+    $scope.filiadosAtivos = function () {
+        var count = 0;
+        for (var i in $scope.filiados) {
+            var filiado = $scope.filiados[i];
+            if (filiado.status === 'ATIVO') {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    $scope.filiadosEmGrupo = function () {
+        var count = 0;
+        for (var i in $scope.filiados) {
+            var filiado = $scope.filiados[i];
+            if (filiado.grupo !== null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     $scope.cadastrar = function (obj) {
         if (obj.id > 0) {
             var dados = { 'session': true, 'metodo': 'atualizar', 'data': obj, 'class': 'filiado' };

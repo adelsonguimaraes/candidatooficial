@@ -94,6 +94,14 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
     }
     listarFuncoes();
 
+    $scope.totalFiliados = function () {
+        var count = 0;
+        for (var i in $scope.lideres) {
+            var lider = $scope.lideres[i];
+            count += +lider.filiados;
+        }
+        return count;
+    }
 
     var listarBairros = function () {
         var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'bairro' };

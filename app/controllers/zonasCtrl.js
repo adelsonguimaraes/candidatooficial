@@ -31,4 +31,13 @@ angular.module(module).controller('zonasCtrl', function ($location, $rootScope, 
             });
     };
     $scope.clickZona('tudo');
+
+    $scope.totalFiliados = function () {
+        var count = 0;
+        for (var i in $scope.lista) {
+            var bairro = $scope.lista[i];
+            count += +bairro.qtdfiliados;
+        }
+        return count;
+    }
 });
