@@ -30,6 +30,9 @@ Class SegmentoControl {
 	function buscarPorId () {
 		return $this->objDAO->buscarPorId($this->obj);
 	}
+	function buscarSegmento ($busca) {
+		return $this->objDAO->buscarSegmento($busca);
+	}
 	function listar () {
 		return $this->objDAO->listar();
 	}

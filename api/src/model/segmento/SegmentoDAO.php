@@ -80,12 +80,9 @@ Class SegmentoDAO {
 	}
 
 	function buscarSegmento ($busca) {
-		$this->sql = "SELECT l.*, b.nome as 'bairro', count(f.id) as 'filiados'
-		FROM lider l
-		inner join bairro b on b.id = l.idbairro
-		inner join filiado f on f.idlider = l.id
-		where l.nome like '%$busca%' or l.celular = '$busca'
-		group by l.id";
+		$this->sql = "SELECT *
+		from segmento
+		where descricao like '%$busca%'";
 		
 		$result = mysqli_query($this->con, $this->sql);
 
