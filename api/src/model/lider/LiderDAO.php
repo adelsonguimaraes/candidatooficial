@@ -58,7 +58,7 @@ Class LiderDAO {
 
 	//atualizar
 	function atualizar (Lider $obj) {
-		$this->sql = sprintf("UPDATE lider SET idtipolider = %d, idfuncao = %d, idsegmento = %d, idbairro = %d, nome = upper('%s'), endereco = upper('%s'), numero = '%s', complemento = upper('%s'), cidade = upper('%s'), uf = upper('%s'), cep = '%s', localidade = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
+		$this->sql = sprintf("UPDATE lider SET idtipolider = %d, idfuncao = %d, idbairro = %d, idsegmento = %d, nome = upper('%s'), endereco = upper('%s'), numero = '%s', complemento = upper('%s'), cidade = upper('%s'), uf = upper('%s'), cep = '%s', localidade = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjfuncao()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
@@ -133,10 +133,11 @@ Class LiderDAO {
 
 	//listar
 	function listar () {
-		$this->sql = "SELECT l.*, b.nome as 'bairro', count(f.id) as 'filiados'
+		$this->sql = "SELECT l.*, b.nome as 'bairro', count(f.id) as 'filiados', s.descricao as 'segmento'
 		FROM lider l
 		inner join bairro b on b.id = l.idbairro
 		left join filiado f on f.idlider = l.id
+		left join segmento s on s.id = l.idsegmento
 		group by l.id";
 
 		$result = mysqli_query($this->con, $this->sql);

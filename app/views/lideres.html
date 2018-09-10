@@ -16,6 +16,7 @@
                     <tr>
                         <td>Nome</td>
                         <td>Filiados</td>
+                        <td>Segmento</td>
                         <td>Bairro</td>
                         <td>Celular</td>
                         <td>Ações</td>
@@ -25,6 +26,7 @@
                     <tr ng-repeat="obj in lideres">
                         <td>{{obj.nome}}</td>
                         <td>{{obj.filiados}}</td>
+                        <td>{{obj.segmento}}</td>
                         <td>{{obj.bairro}}</td>
                         <td>{{obj.celular | cel}}</td>
                         <td>
@@ -42,36 +44,37 @@
                         <td align="center">-</td>
                         <td align="center">-</td>
                         <td align="center">-</td>
+                        <td align="center">-</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
     <div id="form" style="padding:10px 20px;" ng-if="novo">
-        <form>
+        <form name="form">
             <input type="hidden" class="form-control" id="id" ng-model="obj.id">
             <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" class="form-control" id="nome" ng-model="obj.nome">
+                <label for="nome">Nome: <span class="obrigatorio">*</span></label>
+                <input type="text" class="form-control" id="nome" name="nome" ng-required="true" ng-model="obj.nome">
             </div>
             <div class="form-group">
-                <label for="Tipo">Tipo:</label>
-                <select class="form-control" name="funcao" id="tipolider" ng-model="obj.idtipolider" ng-options="obj.id as obj.descricao for obj in tiposlider">
+                <label for="Tipo">Tipo: <span class="obrigatorio">*</span></label>
+                <select class="form-control" name="funcao" id="tipolider" ng-model="obj.idtipolider" ng-required="true" ng-options="obj.id as obj.descricao for obj in tiposlider">
                 </select>
             </div>
             <div class="form-group">
-                <label for="nome">Função:</label>
-                <select class="form-control" name="funcao" id="funcao" ng-model="obj.idfuncao" ng-options="obj.id as obj.descricao for obj in funcoes">
+                <label for="nome">Função: <span class="obrigatorio">*</span></label>
+                <select class="form-control" name="funcao" id="funcao" ng-model="obj.idfuncao" ng-required="true" ng-options="obj.id as obj.descricao for obj in funcoes">
                 </select>
             </div>
             <div class="form-group">
-                <label for="nome">Segmento:</label>
-                <select class="form-control" name="segmento" id="segmento" ng-model="obj.idsegmento" ng-options="obj.id as obj.descricao for obj in segmentos">
+                <label for="nome">Segmento: <span class="obrigatorio">*</span></label>
+                <select class="form-control" name="segmento" id="segmento" ng-model="obj.idsegmento" ng-required="true" ng-options="obj.id as obj.descricao for obj in segmentos">
                 </select>
             </div>
             <div class="form-group">
                 <label for="nome">Localidade:</label>
-                <select class="form-control" name="localidade" id="localidade" ng-model="obj.localidade" ng-options="obj.value as obj.descricao for obj in localidades">
+                <select class="form-control" name="localidade" id="localidade" ng-model="obj.localidade" ng-required="true" ng-options="obj.value as obj.descricao for obj in localidades">
                 </select>
             </div>
             
@@ -87,8 +90,8 @@
             
             <!-- <h4>Endereço</h4><hr> -->
             <div class="form-group">
-                <label for="nome">Bairro:</label>
-                <select class="form-control" name="bairro" id="bairro" ng-model="obj.idbairro" ng-options="obj.id as obj.nome group by obj.zona for obj in bairros">
+                <label for="nome">Bairro: <span class="obrigatorio">*</span></label>
+                <select class="form-control" name="bairro" id="bairro" ng-model="obj.idbairro" ng-required="true" ng-options="obj.id as obj.nome group by obj.zona for obj in bairros">
                 </select>
             </div>
             <div class="form-group">
@@ -108,7 +111,8 @@
                 <input type="text" class="form-control" id="cidade" ng-model="obj.cidade">
             </div>
             <div class="btn-group pull-right">
-                <button class="btn btn-success" ng-click="cadastrar(obj)">Salvar</button>
+                {{form.$isvalid}}
+                <button class="btn btn-success" ng-disabled="form.$invalid" ng-click="cadastrar(obj)">Salvar</button>
                 <button class="btn btn-danger" ng-click="cancelar()">Cancelar</button>
             </div>
         </form>
