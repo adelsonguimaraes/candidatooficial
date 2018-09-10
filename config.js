@@ -487,6 +487,45 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
                 }
             }
         })
+        .state('segmento', {
+            url: "/segmento",
+            templateUrl: "app/views/segmento.html",
+            controller: "segmentoCtrl",
+            data: { pageTitle: 'Segmento', specialClass: 'gray-bg' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            files: ['api/libs/js/plugins/footable/footable.all.min.js', 'api/libs/css/plugins/footable/footable.core.css']
+                        },
+                        {
+                            name: 'ui.footable',
+                            files: ['api/libs/js/plugins/footable/angular-footable.js']
+                        },
+                        {
+                            files: ['api/libs/js/plugins/sweetalert/sweetalert.min.js', 'api/libs/css/plugins/sweetalert/sweetalert.css']
+                        },
+                        {
+                            name: 'oitozero.ngSweetAlert',
+                            files: ['api/libs/js/plugins/sweetalert/angular-sweetalert.min.js']
+                        },
+                        {
+                            files: ['api/libs/css/plugins/iCheck/custom.css', 'api/libs/js/plugins/iCheck/icheck.min.js']
+                        },
+                        {
+                            files: ['api/libs/js/plugins/moment/moment.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['api/libs/css/plugins/datapicker/angular-datapicker.css', 'api/libs/js/plugins/datapicker/angular-datepicker.js']
+                        },
+                        {
+                            files: ['api/libs/js/plugins/jasny/jasny-bootstrap.min.js']
+                        }
+                    ]);
+                }
+            }
+        })
 }
 angular
     .module('candidatooficial')

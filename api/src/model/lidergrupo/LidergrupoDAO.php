@@ -111,7 +111,8 @@ Class LidergrupoDAO {
 		$this->sql = "SELECT lg.*, l.nome as 'lider', a.celular, a.appkey
 		from lidergrupo lg
 		inner join lider l on l.id = lg.idlider
-		inner join appkey a on a.id = lg.idappkey";
+		inner join appkey a on a.id = lg.idappkey
+		order by lg.id desc";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();

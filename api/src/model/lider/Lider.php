@@ -16,6 +16,7 @@ Class Lider implements JsonSerializable {
 	private $objlider;
 	private $objfuncao;
 	private $objbairro;
+	private $objsegmento;
 	private $nome;
 	private $endereco;
 	private $numero;
@@ -36,6 +37,7 @@ Class Lider implements JsonSerializable {
 		Lider $objlider = NULL,
 		Funcao $objfuncao = NULL,
 		Bairro $objbairro = NULL,
+		Segmento $objsegmento = NULL,
 		$nome = NULL,
 		$endereco = NULL,
 		$numero = NULL,
@@ -54,6 +56,7 @@ Class Lider implements JsonSerializable {
 		$this->objlider	= $objlider;
 		$this->objfuncao	= $objfuncao;
 		$this->objbairro	= $objbairro;
+		$this->objsegmento = $objsegmento;
 		$this->nome	= $nome;
 		$this->endereco	= $endereco;
 		$this->numero	= $numero;
@@ -95,6 +98,13 @@ Class Lider implements JsonSerializable {
 	}
 	public function setObjbairro($objbairro) {
 		$this->objbairro = $objbairro;
+		return $this;
+	}
+	public function getObjsegmento() {
+		return $this->objsegmento;
+	}
+	public function setObjsegmento($objsegmento) {
+		$this->objsegmento = $objsegmento;
 		return $this;
 	}
 	public function getNome() {
@@ -189,6 +199,7 @@ Class Lider implements JsonSerializable {
 			"objlider"	=> $this->objlider,
 			"objfuncao"	=> $this->objfuncao,
 			"objbairro"	=> $this->objbairro,
+			"objsegmento" => $this->objsegmento,
 			"nome"	=> $this->nome,
 			"endereco"	=> $this->endereco,
 			"numero"	=> $this->numero,

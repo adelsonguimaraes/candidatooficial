@@ -27,6 +27,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
             idtipolider: ($scope.tiposlider.length > 0) ? $scope.tiposlider[0].id : null,
             idfuncao: ($scope.funcoes.length > 0) ? $scope.funcoes[0].id : null,
             idbairro: ($scope.bairros.length > 0) ? $scope.bairros[0].id : null,
+            idsegmento: ($scope.segmentos.length > 0) ? $scope.segmentos[0].id : null,
             nome: null,
             endereco: null,
             numero: null,
@@ -94,6 +95,22 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
     }
     listarFuncoes();
 
+    var listarSegmentos = function () {
+        var dados = { 'session': true, 'metodo': 'listar', 'data': '', 'class': 'segmento' };
+
+        genericAPI.generic(dados)
+            .then(function successCallback(response) {
+                if (response.data.success) {
+                    $scope.segmentos = response.data.data;
+                    $scope.obj.idsegmento = (response.data.data.length > 0) ? response.data.data[0].id : null;
+                } else {
+                    SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
+                }
+            }, function errorCallback(response) {
+            });
+    }
+    listarSegmentos();
+
     $scope.totalFiliados = function () {
         var count = 0;
         for (var i in $scope.lideres) {
@@ -159,6 +176,7 @@ angular.module(module).controller('lideresCtrl', function ($rootScope, $scope, $
             idtipolider: obj.idtipolider,
             idfuncao: obj.idfuncao,
             idbairro: obj.idbairro,
+            idsegmento: obj.idsegmento,
             nome: obj.nome,
             endereco: obj.endereco,
             numero: obj.numero,
