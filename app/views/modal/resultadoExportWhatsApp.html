@@ -1,0 +1,25 @@
+<div class="inmodal">
+    <div class="modal-header">
+        <h4 class="modal-title">Resultado Exportação Whatsapp</h4>
+        <small class="font-bold">Total de adicionados e desistentes.</small>
+    </div>
+    <div class="modal-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Adicionados</td>
+                    <td>Desistentes</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{obj.adicionados}}</td>
+                    <td>{{obj.desistentes}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="cancelar()">Fechar</button>
+    </div>
+</div>

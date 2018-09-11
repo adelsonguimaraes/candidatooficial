@@ -54,6 +54,40 @@ Class FiliadoDAO {
 		return $this->superdao->getResponse();
 	}
 
+	//cadastrar
+	function cadastrarViaExport (filiado $obj) {
+
+		$resp = $this->buscarPorNomeNumero($obj->getCelular());
+		if ($resp['success']===false) return $resp;
+		
+		$this->superdao->resetResponse();
+		if (count($resp['data'])>0) {
+			$this->superdao->setSuccess( true );
+			return $this->superdao->getResponse();
+		}
+
+
+		$this->sql = sprintf("INSERT INTO filiado(idlider, idlidergrupo, idbairro, nome, celular, datacadastro)
+		VALUES(%d, %d, %d, '%s', '%s', '%s')",
+			mysqli_real_escape_string($this->con, $obj->getObjlider()->getId()),
+			mysqli_real_escape_string($this->con, $obj->getObjlidergrupo()->getId()),
+			mysqli_real_escape_string($this->con, $obj->getObjbairro()->getId()),
+			mysqli_real_escape_string($this->con, $obj->getNome()),
+			mysqli_real_escape_string($this->con, $obj->getCelular()),
+			mysqli_real_escape_string($this->con, $obj->getDatacadastro()));
+
+		
+		if(!mysqli_query($this->con, $this->sql)) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'cadastrarViaExport' ) );
+		}else{
+			$id = mysqli_insert_id( $this->con );
+
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $id );
+		}
+		return $this->superdao->getResponse();
+	}
+
 	//atualizar
 	function atualizar (Filiado $obj) {
 		$this->sql = sprintf("UPDATE filiado SET idlider = %d, idbairro = %d, nome = upper('%s'), datanascimento = '%s', endereco = upper('%s'), numero = '%s', complemento = upper('%s'), cidade = upper('%s'), uf = upper('%s'), cep = '%s', celular = '%s', email = '%s', dataedicao = '%s' WHERE id = %d ",
@@ -137,7 +171,7 @@ Class FiliadoDAO {
 		$this->superdao->resetResponse();
 
 		if(!$result) {
-			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'filiado', 'BuscarPorId' ) );
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), 'filiado', 'buscarPorNomeNumero' ) );
 		}else{
 			while($row = mysqli_fetch_assoc($result)) {
 				$row['checked'] = true;
@@ -201,7 +235,8 @@ Class FiliadoDAO {
 		FROM filiado f
 		inner join bairro b on b.id = f.idbairro
 		inner join lider l on l.id = f.idlider
-		left join lidergrupo lg on lg.id = f.idlidergrupo";
+		left join lidergrupo lg on lg.id = f.idlidergrupo
+		order by f.id desc";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
@@ -224,7 +259,8 @@ Class FiliadoDAO {
 		FROM filiado f
 		inner join bairro b on b.id = f.idbairro
 		inner join lider l on l.id = f.idlider
-		where l.id = $idlider";
+		where l.id = $idlider
+		order by f.id desc";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();

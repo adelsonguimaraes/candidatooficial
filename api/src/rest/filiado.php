@@ -147,6 +147,106 @@ function ScannearTxt() {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 	$txt = str_replace(' ','+',$data['txt']);
 	$txt = base64_decode($txt);
+	
+	$resp = getNomeGrupo($data['nome']);
+	if ($resp['success']===false) die(json_encode($resp));
+	$grupo = $resp['data'];
+
+	$resp = getFiliadosAdicionados($txt, $grupo);
+
+	if ($resp['success']===false) die(json_encode($resp));
+	$totalAdicionados = $resp['data'];
+	
+	$resp = getFilaidosDesistentes($txt);
+	if ($resp['success']===false) die(json_encode($resp));
+	$totalDesistentes = $resp['data'];
+
+	$response['success'] = true;
+	$response['data'] = array("adicionados"=>$totalAdicionados, "desistentes"=>$totalDesistentes);
+	
+	echo json_encode($response);
+}
+
+function getNomeGrupo ($nome) {
+	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
+
+	$regex = '/#[\w\W]*?[\s|.]/';
+	preg_match_all($regex, $nome, $resultGrupo);
+	if (count($resultGrupo[0])<=0) {
+		$response['msg'] = 'Erro no nome do Grupo';
+		die (json_encode($response));
+	}
+
+	$grupo = substr(trim($resultGrupo[0][0]), 0, -1);
+
+	$controlLG = new LiderGrupoControl();
+	$resp = $controlLG->buscarGrupo($grupo);
+	if ($resp['success']===false) die(json_encode($resp));
+	
+	return $resp;
+}
+
+function getFiliadosAdicionados ($txt, $grupo) {
+	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
+
+	$regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou\s[\w\W]*?\n/';
+	preg_match_all($regex, $txt, $matchs);
+	if (count($matchs[0])<=0) {
+		$response['msg'] = 'Nenhuma movimentação foi encontrada';
+		die (json_encode($response));
+	}
+	$contatos = [];
+	// laço para tratamento
+	$count = 0;
+	foreach ($matchs[0] as $key) {
+		// pegando usuário ou número
+		preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
+		$data = trim($data[0]);
+		$split = explode(' ', $data);
+		$horario = $split[1] . ':00';
+		$split = explode('/', $split[0]);
+		$data = '20' . $split[2] . '-' . $split[1] . '-' . $split[0];
+		$datahora = $data . 'T' .$horario;
+
+		// removendo o usuário que adicionou os contatos
+		$key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+
+		// regex para pegar números
+		$regex = '/\d{2}\s\d{4}-\d{4}/';
+		preg_match_all($regex, $key, $numeros);
+		// if (count($numeros[0])<=0) {
+		// 	$response['msg'] = 'Nenhum numero foi encontrada';
+		// 	die (json_encode($response));
+		// }
+
+		foreach ($numeros[0] as $numero) {
+			$split = explode(' ', $numero);
+			$numero = $split[0] . '9' . $split[1];
+			$split = explode('-', $numero);
+			$numero = $split[0].$split[1];
+			
+			$obj = new Filiado();
+			$obj->setObjlider(new Lider($grupo[0]->idlider))
+				->setObjlidergrupo(new LiderGrupo($grupo[0]->id))
+				->setObjbairro(new Bairro(1))
+				->setNome($numero)
+				->setCelular($numero)
+				->setDatacadastro($datahora);
+			
+			$control = new FiliadoControl($obj);
+			$response = $control->cadastrarViaExport();
+			
+			if ($response['success'] === false) die (json_encode($response));
+			if ($response['data']>0) $count++;
+		}
+	}
+	$response['data'] = $count;
+	return $response;
+}
+
+function getFilaidosDesistentes ($txt) {
+	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
+
 	$regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\ssaiu/';
 	preg_match_all($regex, $txt, $result);
 	if (count($result[0])<=0) {
@@ -154,7 +254,8 @@ function ScannearTxt() {
 		die (json_encode($response));
 	}
 
-	$contatos = [];
+	// $contatos = [];
+	$count = 0;
 	// laço para tratamento
 	foreach ($result[0] as $key) {
 		// quebrando a string
@@ -184,15 +285,20 @@ function ScannearTxt() {
 		$control = new FiliadoControl();
 		$resp = $control->buscarPorNomeNumero($contato);
 		if ($resp['success'] === false) die($resp); // se ocorrer um erro
+		$filiado = $resp['data'];
 		
 		// se for encontrado o contato
-		if ($resp['data'] !== null) array_push($contatos, $resp['data']);
-	}
+		// if ($resp['data'] !== null) array_push($contatos, $resp['data']);
 
+		if ($filiado !== null && $filiado['status'] !== 'DESISTENTE') {
+			$response = $control->atualizarStatus($filiado['id'], 'DESISTENTE');
+			if ($response['success'] === false) die (json_encode($response));
+			$count++;
+		}
+	}
 	$response['success'] = true;
-	$response['data'] = $contatos;
-	
-	echo json_encode($response);
+	$response['data'] = $count;
+	return $response;
 }
 
 function efetivarDesistentes () {

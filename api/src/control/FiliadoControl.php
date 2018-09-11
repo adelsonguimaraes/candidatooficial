@@ -27,6 +27,9 @@ Class FiliadoControl {
 	function cadastrar () {
 		return $this->objDAO->cadastrar($this->obj);
 	}
+	function cadastrarViaExport () {
+		return $this->objDAO->cadastrarViaExport($this->obj);
+	}
 	function atualizar () {
 		return $this->objDAO->atualizar($this->obj);
 	}

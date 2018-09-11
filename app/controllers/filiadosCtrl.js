@@ -224,7 +224,8 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                 var base64 = file.target.result;
 
                 var data = {
-                    txt: base64
+                    txt: base64,
+                    nome: e.path[0].files[0].name
                 };
 
                 $rootScope.loading = 'block';
@@ -235,8 +236,8 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
                     .then(function successCallback(response) {
                         if (response.data.success) {
                             $rootScope.loading = 'none';
-                            $rootScope.filiadosDesistentes = response.data.data;
-                            $scope.showDesistentes();
+                            $scope.showResultadoExportacaoWpp(response.data.data);
+                            $scope.listarFiliados();
                         } else {
                             $rootScope.loading = 'none';
                             SweetAlert.swal({ html: true, title: "Atenção", text: response.data.msg, type: "error" });
@@ -247,14 +248,27 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
             reader.readAsDataURL(e.path[0].files[0]);
         });
     }
-    $scope.showDesistentes = function () {
+    $scope.showResultadoExportacaoWpp = function (obj) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'app/views/modal/filiadosdesistentes.html',
-            controller: 'filiadosdesistentesCtrl',
+            templateUrl: 'app/views/modal/resultadoExportWhatsapp.html',
+            controller: resultadoExportWhatsappCtrl,
             size: 'lg',
-            backdrop: 'static'
+            backdrop: 'static',
+            resolve: {
+                obj: function () {
+                    return obj;
+                }
+            }
         });
     }
+    function resultadoExportWhatsappCtrl ($scope, $uibModalInstance, obj) {
+        $scope.obj = obj;
+        $scope.cancelar = function () {
+            $uibModalInstance.dismiss('cancel');
+        }
+    }
+
+
     $scope.delete = function (obj) {
         SweetAlert.swal({
             title: "Deseja remover?",
@@ -337,5 +351,15 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     $scope.limparBusca = function () {
         $rootScope.listarFiliados();
         $scope.busca.busca = '';
+    }
+
+    $scope.orderBy = 'id';
+    $scope.sort = function (column) {
+        $scope.orderBy = (column ===$scope.orderBy) ? '-'+column : column;
+        // $scope.filiados.sort(
+        //     function (a, b) { 
+        //         return b-a
+        //     }
+        // );
     }
 });

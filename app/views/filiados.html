@@ -17,17 +17,19 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <td>Nome</td>
-                        <td ng-if="usuario.idlider===null">Líder</td>
-                        <td>Grupo</td>
-                        <td>Bairro</td>
-                        <td>Celular</td>
-                        <td>Status</td>
+                        <td>ID <i class="fa fa-sort pull-right" ng-click="sort('id')"></i></td>
+                        <td>Nome <i class="fa fa-sort pull-right" ng-click="sort('nome')"></i></td>
+                        <td ng-if="usuario.idlider===null">Líder <i class="fa fa-sort pull-right" ng-click="sort('lider')"></i></td>
+                        <td>Grupo <i class="fa fa-sort pull-right" ng-click="sort('grupo')"></i></td>
+                        <td>Bairro <i class="fa fa-sort pull-right" ng-click="sort('bairro')"></i></td>
+                        <td>Celular <i class="fa fa-sort pull-right" ng-click="sort('celular')"></i></td>
+                        <td>Status <i class="fa fa-sort pull-right" ng-click="sort('status')"></i></td>
                         <td>Ações</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="obj in filiados">
+                    <tr ng-repeat="obj in filiados | orderBy: orderBy">
+                        <td>{{obj.id}}</td>
                         <td>{{obj.nome}}</td>
                         <td ng-if="usuario.idlider===null">{{obj.lider}}</td>
                         <td>{{obj.grupo}}</td>
@@ -54,6 +56,7 @@
                         <td align="center">-</td>
                         <td align="center">-</td>
                         <td>({{filiadosAtivos()}}) Ativos</td>
+                        <td align="center">-</td>
                         <td align="center">-</td>
                     </tr>
                 </tfoot>
