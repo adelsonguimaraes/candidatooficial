@@ -86,9 +86,10 @@ Class LidergrupoDAO {
 
 	//listar
 	function buscarGrupo ($busca) {
-		$this->sql = "SELECT lg.*, l.nome as 'lider'
+		$this->sql = "SELECT lg.*, l.nome as 'lider', b.id as 'lider_idbairro'
 		from lidergrupo lg
 		inner join lider l on l.id = lg.idlider
+		inner join bairro b on b.id = l.idbairro
 		where lg.nome like '%$busca%'";
 		$result = mysqli_query($this->con, $this->sql);
 

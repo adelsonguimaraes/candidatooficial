@@ -233,7 +233,7 @@ function getFiliadosAdicionados ($txt, $grupo) {
 			$obj = new Filiado();
 			$obj->setObjlider(new Lider($grupo[0]->idlider))
 				->setObjlidergrupo(new Lidergrupo($grupo[0]->id))
-				->setObjbairro(new Bairro(1))
+				->setObjbairro(new Bairro($grupo[0]->lider_idbairro))
 				->setNome($numero)
 				->setCelular($numero)
 				->setDatacadastro($datahora);
