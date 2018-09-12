@@ -24,6 +24,7 @@
                         <td>Bairro <i class="fa fa-sort pull-right" ng-click="sort('bairro')"></i></td>
                         <td>Celular <i class="fa fa-sort pull-right" ng-click="sort('celular')"></i></td>
                         <td>Status <i class="fa fa-sort pull-right" ng-click="sort('status')"></i></td>
+                        <!-- <td>Entrada <i class="fa fa-sort pull-right" ng-click="sort('datacadastro')"></i></td> -->
                         <td>Ações</td>
                     </tr>
                 </thead>
@@ -36,6 +37,7 @@
                         <td>{{obj.bairro}}</td>
                         <td>{{obj.celular | cel}}</td>
                         <td>{{obj.status}}</td>
+                        <!-- <td>{{obj.datacadastro | data}}</td> -->
                         <td>
                             <div class="btna-group">
                                 <button class="btn btn-success btn-small" ng-click="edit(obj)">

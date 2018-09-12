@@ -250,7 +250,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
     }
     $scope.showResultadoExportacaoWpp = function (obj) {
         var modalInstance = $uibModal.open({
-            templateUrl: 'app/views/modal/resultadoExportWhatsapp.html',
+            templateUrl: 'app/views/modal/resultadoExportWhatsApp.html',
             controller: resultadoExportWhatsappCtrl,
             size: 'lg',
             backdrop: 'static',
@@ -353,7 +353,7 @@ angular.module(module).controller('filiadosCtrl', function ($rootScope, $scope, 
         $scope.busca.busca = '';
     }
 
-    $scope.orderBy = 'id';
+    $scope.orderBy = '';
     $scope.sort = function (column) {
         $scope.orderBy = (column ===$scope.orderBy) ? '-'+column : column;
         // $scope.filiados.sort(

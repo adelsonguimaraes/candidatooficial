@@ -70,7 +70,7 @@ function cadastrar () {
 
 	if (!empty($data['idlidergrupo'])) {
 		$control = new FiliadoControl();
-		$response = $control->setIdLiderGrupo($idfiliado, $data['idlidergrupo']);
+		$response = $control->setIdLidergrupo($idfiliado, $data['idlidergrupo']);
 	}
 
 	echo json_encode($response);
@@ -129,7 +129,7 @@ function atualizar () {
 
 	if (!empty($data['idlidergrupo'])) {
 		$control = new FiliadoControl();
-		$response = $control->setIdLiderGrupo($idfiliado, $data['idlidergrupo']);
+		$response = $control->setIdLidergrupo($idfiliado, $data['idlidergrupo']);
 	}
 
 	echo json_encode($response);
@@ -179,9 +179,14 @@ function getNomeGrupo ($nome) {
 
 	$grupo = substr(trim($resultGrupo[0][0]), 0, -1);
 
-	$controlLG = new LiderGrupoControl();
+	$controlLG = new LidergrupoControl();
 	$resp = $controlLG->buscarGrupo($grupo);
 	if ($resp['success']===false) die(json_encode($resp));
+	if (count($resp['data'])<=0) {
+		$resp['success'] = false;
+		$resp['msg'] = "Grupo " . $grupo . " não foi encontrado no sistema.";
+		die(json_encode($resp));
+	}
 	
 	return $resp;
 }
@@ -227,7 +232,7 @@ function getFiliadosAdicionados ($txt, $grupo) {
 			
 			$obj = new Filiado();
 			$obj->setObjlider(new Lider($grupo[0]->idlider))
-				->setObjlidergrupo(new LiderGrupo($grupo[0]->id))
+				->setObjlidergrupo(new Lidergrupo($grupo[0]->id))
 				->setObjbairro(new Bairro(1))
 				->setNome($numero)
 				->setCelular($numero)
