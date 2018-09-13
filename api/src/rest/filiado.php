@@ -161,12 +161,12 @@ function ScannearTxt() {
 	if ($resp['success']===false) die(json_encode($resp));
 	$totalDesistentes = $resp['data'];
 
-	// $resp = getFiliadosRemovidos ($txt, $grupo);
-	// if ($resp['success']===false) die(json_encode($resp));
-	// $totalRemovidos = $resp['data'];
+	$resp = getFiliadosRemovidos ($txt, $grupo);
+	if ($resp['success']===false) die(json_encode($resp));
+	$totalRemovidos = $resp['data'];
 
 	$response['success'] = true;
-	$response['data'] = array("adicionados"=>$totalAdicionados, "desistentes"=>$totalDesistentes);
+	$response['data'] = array("adicionados"=>$totalAdicionados, "desistentes"=>$totalDesistentes, "removidos"=>$totalRemovidos);
 	
 	echo json_encode($response);
 }
