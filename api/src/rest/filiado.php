@@ -153,7 +153,6 @@ function ScannearTxt() {
 	$grupo = $resp['data'];
 
 	$resp = getFiliadosAdicionados($txt, $grupo);
-
 	if ($resp['success']===false) die(json_encode($resp));
 	$totalAdicionados = $resp['data'];
 	
@@ -245,7 +244,9 @@ function getFiliadosAdicionados ($txt, $grupo) {
 			$control = new FiliadoControl($obj);
 			$response = $control->cadastrarViaExport();
 			
-			if ($response['success'] === false) die (json_encode($response));
+			if ($response['success'] === false) {
+				die (json_encode($response));
+			}
 			if ($response['data']>0) $count++;
 		}
 	}
@@ -293,7 +294,9 @@ function getFilaidosDesistentes ($txt) {
 		
 		$control = new FiliadoControl();
 		$resp = $control->buscarPorNomeNumero($contato);
-		if ($resp['success'] === false) die($resp); // se ocorrer um erro
+		if ($resp['success'] === false) {
+			die($resp); // se ocorrer um erro
+		}
 		$filiado = $resp['data'];
 		
 		// se for encontrado o contato
@@ -301,7 +304,9 @@ function getFilaidosDesistentes ($txt) {
 
 		if ($filiado !== null && $filiado['status'] !== 'DESISTENTE') {
 			$response = $control->atualizarStatus($filiado['id'], 'DESISTENTE');
-			if ($response['success'] === false) die (json_encode($response));
+			if ($response['success'] === false) {
+				die (json_encode($response));
+			}
 			$count++;
 		}
 	}
@@ -344,17 +349,22 @@ function getFiliadosRemovidos ($txt, $grupo) {
 			
 			$control = new FiliadoControl();
 			$response = $control->buscarPorNomeNumero($numero);
-			if ($response['success'] === false) die (json_encode($response));
+			if ($response['success'] === false) {
+				die (json_encode($response));
+			}
 			$filiado = $response['data'];
 		
 			if ($filiado !== null) {
 				$control = new FiliadoControl(new Filiado($filiado['id']));
 				$response = $control->deletar();
-				if ($response['success'] === false) die (json_encode($response));
+				if ($response['success'] === false) {
+					die (json_encode($response));
+				}
 				$count++;
 			}
 		}
 	}
+	$response['success'] = true;
 	$response['data'] = $count;
 	return $response;
 }
@@ -364,7 +374,9 @@ function efetivarDesistentes () {
 	foreach ($data as $key) {
 		$control = new FiliadoControl();
 		$resp = $control->atualizarStatus($key['id'], 'DESISTENTE');
-		if ($resp['success'] === false) die (json_encode($resp));
+		if ($resp['success'] === false) {
+			die (json_encode($resp));
+		}
 	}
 	echo json_encode($resp);
 }

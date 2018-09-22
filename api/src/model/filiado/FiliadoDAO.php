@@ -189,7 +189,7 @@ Class FiliadoDAO {
 		inner join bairro b on b.id = f.idbairro
 		inner join lider l on l.id = f.idlider
 		left join lidergrupo lg on lg.id = f.idlidergrupo
-		where f.nome like '%$busca%' or f.celular = '$busca'";
+		where (f.nome like '%$busca%' or f.celular = '$busca' or l.nome like '%$busca%')";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
