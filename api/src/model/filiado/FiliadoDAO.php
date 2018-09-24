@@ -236,7 +236,8 @@ Class FiliadoDAO {
 		inner join bairro b on b.id = f.idbairro
 		inner join lider l on l.id = f.idlider
 		left join lidergrupo lg on lg.id = f.idlidergrupo
-		order by f.id desc";
+		order by f.id desc
+		limit 100";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
@@ -260,7 +261,8 @@ Class FiliadoDAO {
 		inner join bairro b on b.id = f.idbairro
 		inner join lider l on l.id = f.idlider
 		where l.id = $idlider
-		order by f.id desc";
+		order by f.id desc
+		limit 100";
 		$result = mysqli_query($this->con, $this->sql);
 
 		$this->superdao->resetResponse();
