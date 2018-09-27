@@ -155,7 +155,7 @@ function ScannearTxt() {
 	$resp = getFiliadosAdicionados($txt, $grupo);
 	if ($resp['success']===false) die(json_encode($resp));
 	$totalAdicionados = $resp['data'];
-	
+
 	$resp = getFilaidosDesistentes($txt);
 	if ($resp['success']===false) die(json_encode($resp));
 	$totalDesistentes = $resp['data'];
@@ -166,7 +166,7 @@ function ScannearTxt() {
 
 	$response['success'] = true;
 	$response['data'] = array("adicionados"=>$totalAdicionados, "desistentes"=>$totalDesistentes, "removidos"=>$totalRemovidos);
-	
+
 	echo json_encode($response);
 }
 
@@ -250,6 +250,8 @@ function getFiliadosAdicionados ($txt, $grupo) {
 			if ($response['data']>0) $count++;
 		}
 	}
+		
+	$response['success'] = true;
 	$response['data'] = $count;
 	return $response;
 }
