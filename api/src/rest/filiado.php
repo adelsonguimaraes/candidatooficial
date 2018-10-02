@@ -207,63 +207,108 @@ function getFiliadosAdicionados ($txt, $grupo) {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 
 	// $regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou\s[\w\W]*?\n/';
-	$regerx = '/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\sadicionou\s[\w\W]*?\n/';
+	$regex = '/(\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2})\s-?\s?\S*\+?[\w\s]+\S*[^:]\sadicionou\s([\w\W]*?)\n/';
 	preg_match_all($regex, $txt, $matchs);
-	// if (count($matchs[0])<=0) {
-		// $response['msg'] = 'Nenhuma movimentação foi encontrada';
-		// die (json_encode($response));
-	// }
-	// $contatos = [];
-	// laço para tratamento
-	$count = 0;
-	foreach ($matchs[0] as $key) {
-		// pegando usuário ou número
-		// preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
-		preg_match('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}/', $key, $data);
-		$data = preg_replace("/\[|\]/", "", $data[0]);
-		$data = trim($data[0]);
+
+	$count=0;
+	
+	for ($i=0; $i<count($matchs[0]); $i++) {
+		$data = preg_replace("/\[|\]/", "", $matchs[1][$i]);
+		$data = trim($data);
 		$split = explode(' ', $data);
-		$horario = $split[1] .= (count($split[1])>5) ? ':00' : '';
+
+		$horario = $split[1] .= (strlen($split[1])<=5) ? ':00' : '';
+
 		$split = explode('/', $split[0]);
-		$data = ((count($split[2])>4) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
+
+		$data = ((strlen($split[2])<=2) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
 		$datahora = $data . 'T' .$horario;
 
-		// removendo o usuário que adicionou os contatos
-		// $key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
-		$key = preg_replace('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+		$numeros = preg_split("/\se|,/", $matchs[2][$i]);
 
-		// regex para pegar números
-		// $regex = '/\d{2}\s\d{4}-\d{4}/';
-		$regex = '/\d{2}\s?\S?\d{4}\S\d{4}/';
-		preg_match_all($regex, $key, $numeros);
-		// if (count($numeros[0])<=0) {
-		// 	$response['msg'] = 'Nenhum numero foi encontrada';
-		// 	die (json_encode($response));
-		// }
+		foreach ($numeros as $numero) {
+			$numero = trim(utf16_2_utf8($numero));
+			$numero = preg_replace("/\D/", "", $numero);
+			if (strlen($numero)>0) {
+				$numero = substr($numero, 2, 2) . '9' . substr($numero, 4);
 
-		foreach ($numeros[0] as $numero) {
-			$split = explode(' ', $numero);
-			$numero = $split[0] . '9' . $split[1];
-			$split = explode('-', $numero);
-			$numero = $split[0].$split[1];
-			
-			$obj = new Filiado();
-			$obj->setObjlider(new Lider($grupo[0]->idlider))
-				->setObjlidergrupo(new Lidergrupo($grupo[0]->id))
-				->setObjbairro(new Bairro($grupo[0]->lider_idbairro))
-				->setNome($numero)
-				->setCelular($numero)
-				->setDatacadastro($datahora);
-			
-			$control = new FiliadoControl($obj);
-			$response = $control->cadastrarViaExport();
-			
-			if ($response['success'] === false) {
-				die (json_encode($response));
+				$obj = new Filiado();
+				$obj->setObjlider(new Lider($grupo[0]->idlider))
+					->setObjlidergrupo(new Lidergrupo($grupo[0]->id))
+					->setObjbairro(new Bairro($grupo[0]->lider_idbairro))
+					->setNome($numero)
+					->setCelular($numero)
+					->setDatacadastro($datahora);
+				
+				$control = new FiliadoControl($obj);
+				$response = $control->cadastrarViaExport();
+				
+				if ($response['success'] === false) {
+					die (json_encode($response));
+				}
+				if ($response['data']>0) $count++;
 			}
-			if ($response['data']>0) $count++;
 		}
 	}
+
+	// // if (count($matchs[0])<=0) {
+	// 	// $response['msg'] = 'Nenhuma movimentação foi encontrada';
+	// 	// die (json_encode($response));
+	// // }
+	// // $contatos = [];
+	// // laço para tratamento
+	// $count = 0;
+	// foreach ($matchs[1] as $key) {
+
+	// 	// pegando usuário ou número
+	// 	// preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
+	// 	preg_match('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}/', $key, $data);
+	// 	$data = preg_replace("/\[|\]/", "", $data[0]);
+	// 	$data = trim($data);
+	// 	$split = explode(' ', $data);
+
+	// 	$horario = $split[1] .= (count($split[1])>5) ? ':00' : '';
+
+	// 	$split = explode('/', $split[0]);
+	// 	$data = ((count($split[2])>4) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
+	// 	$datahora = $data . 'T' .$horario;
+
+	// 	// removendo o usuário que adicionou os contatos
+	// 	// $key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+	// 	$key = preg_replace('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+
+	// 	// regex para pegar números
+	// 	// $regex = '/\d{2}\s\d{4}-\d{4}/';
+	// 	$regex = '/\d{2}\s?\S?\d{4}\S\d{4}/';
+	// 	preg_match_all($regex, $key, $numeros);
+	// 	// if (count($numeros[0])<=0) {
+	// 	// 	$response['msg'] = 'Nenhum numero foi encontrada';
+	// 	// 	die (json_encode($response));
+	// 	// }
+
+	// 	foreach ($numeros[0] as $numero) {
+	// 		$split = explode(' ', $numero);
+	// 		$numero = $split[0] . '9' . $split[1];
+	// 		$split = explode('-', $numero);
+	// 		$numero = $split[0].$split[1];
+			
+	// 		$obj = new Filiado();
+	// 		$obj->setObjlider(new Lider($grupo[0]->idlider))
+	// 			->setObjlidergrupo(new Lidergrupo($grupo[0]->id))
+	// 			->setObjbairro(new Bairro($grupo[0]->lider_idbairro))
+	// 			->setNome($numero)
+	// 			->setCelular($numero)
+	// 			->setDatacadastro($datahora);
+			
+	// 		$control = new FiliadoControl($obj);
+	// 		$response = $control->cadastrarViaExport();
+			
+	// 		if ($response['success'] === false) {
+	// 			die (json_encode($response));
+	// 		}
+	// 		if ($response['data']>0) $count++;
+	// 	}
+	// }
 		
 	$response['success'] = true;
 	$response['data'] = $count;
@@ -274,67 +319,143 @@ function getFilaidosDesistentes ($txt) {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 
 	// $regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\ssaiu/';
-	$regex = '/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\ssaiu/';
+	$regex = '/(\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2})\s-?\s?(\S*\+?[\w\s]+\S*[^:])\ssaiu/';
 	preg_match_all($regex, $txt, $result);
+
+	$count=0;
+
+	for ($i=0; $i<count($result[0]); $i++) {
+		$data = preg_replace("/\[|\]/", "", $result[1][$i]);
+		$data = trim($data);
+		$split = explode(' ', $data);
+
+		$horario = $split[1] .= (strlen($split[1])<=5) ? ':00' : '';
+
+		$split = explode('/', $split[0]);
+
+		$data = ((strlen($split[2])<=2) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
+		$datahora = $data . 'T' .$horario;
+
+		$numeros = preg_split("/\se|,/", $result[2][$i]);
+
+		foreach ($numeros as $numero) {
+			$numero = trim(utf16_2_utf8($numero));
+			$numero = preg_replace("/\D/", "", $numero);
+			if (strlen($numero)>0) {
+				$numero = substr($numero, 2, 2) . '9' . substr($numero, 4);
+
+				$control = new FiliadoControl();
+				$resp = $control->buscarPorNomeNumero($numero);
+				if ($resp['success'] === false) {
+					die($resp); // se ocorrer um erro
+				}
+				$filiado = $resp['data'];
+				
+				// se for encontrado o contato
+				// if ($resp['data'] !== null) array_push($contatos, $resp['data']);
+
+				if ($filiado !== null && $filiado['status'] !== 'DESISTENTE') {
+					$response = $control->atualizarStatus($filiado['id'], 'DESISTENTE');
+					if ($response['success'] === false) {
+						die (json_encode($response));
+					}
+					$count++;
+				}
+			}
+		}
+
+		// if (count($numeros[0])>0) {
+
+		// 	foreach ($numeros[0] as $numero) {
+
+		// 		$split = explode(' ', $numero);
+		// 		$numero = $split[0] . '9' . $split[1];
+		// 		$split = explode('-', $numero);
+		// 		$numero = $split[0].$split[1];
+
+		// 		$control = new FiliadoControl();
+		// 		$resp = $control->buscarPorNomeNumero($numero);
+		// 		if ($resp['success'] === false) {
+		// 			die($resp); // se ocorrer um erro
+		// 		}
+		// 		$filiado = $resp['data'];
+				
+		// 		// se for encontrado o contato
+		// 		// if ($resp['data'] !== null) array_push($contatos, $resp['data']);
+
+		// 		if ($filiado !== null && $filiado['status'] !== 'DESISTENTE') {
+		// 			$response = $control->atualizarStatus($filiado['id'], 'DESISTENTE');
+		// 			if ($response['success'] === false) {
+		// 				die (json_encode($response));
+		// 			}
+		// 			$count++;
+		// 		}
+		// 	}
+		// }
+
+	}
+
+	
 	// if (count($result[0])<=0) {
 	// 	$response['msg'] = 'Nenhuma movimentação foi encontrada';
 	// 	die (json_encode($response));
 	// }
 
-	// $contatos = [];
-	$count = 0;
-	// laço para tratamento
-	foreach ($result[0] as $key) {
-		// quebrando a string
-		// preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}/', $key, $datahora);
-		// $split = explode(' ', $datahora[0]);
-		// $data = str_replace('/', '-', $split[0]);
-		// $hora = $split[1];
-		// $split = explode('-', $data);
-		// $data = '20'.$split[2]. '-' .$split[1]. '-' .$split[0];
-		preg_match('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}/', $key, $data);
-		$data = preg_replace("/\[|\]/", "", $data[0]);
-		$data = trim($data[0]);
-		$split = explode(' ', $data);
-		$horario = $split[1] .= (count($split[1])>5) ? ':00' : '';
-		$split = explode('/', $split[0]);
-		$data = ((count($split[2])>4) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
-		$datahora = $data . 'T' .$horario;
-
-		$data = new DateTime($data.' '.$hora);
-		$datahora = $data->format('Y-m-d H:i:s');
-
-		// pegando usuário ou número
-		preg_match('/\S*\+?[\w\s]+\S*[^:]\ssaiu/', $key, $contato);
-		$contato = trim(utf16_2_utf8($contato[0]));
-		$contato = preg_replace('/\s*saiu/', '',$contato); // remove saiu
-		$contato = preg_replace('/55/', '',$contato); // remove 55
-		// $contato = preg_replace('/\s*/', '',$contato); // remove espaços
-
-		// se for numero celular
-		if (preg_replace('/[\d\s]/', '', $contato) === '') {
-			$contato = preg_replace('/\s/', '', $contato);
-			$contato = substr($contato, 0, 2) . '9' . substr($contato, 2);
-		}
+	// // $contatos = [];
+	// $count = 0;
+	// // laço para tratamento
+	// foreach ($result[0] as $key) {
 		
-		$control = new FiliadoControl();
-		$resp = $control->buscarPorNomeNumero($contato);
-		if ($resp['success'] === false) {
-			die($resp); // se ocorrer um erro
-		}
-		$filiado = $resp['data'];
-		
-		// se for encontrado o contato
-		// if ($resp['data'] !== null) array_push($contatos, $resp['data']);
+	// 	// quebrando a string
+	// 	// preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}/', $key, $datahora);
+	// 	// $split = explode(' ', $datahora[0]);
+	// 	// $data = str_replace('/', '-', $split[0]);
+	// 	// $hora = $split[1];
+	// 	// $split = explode('-', $data);
+	// 	// $data = '20'.$split[2]. '-' .$split[1]. '-' .$split[0];
+	// 	preg_match('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}/', $key, $data);
+	// 	$data = preg_replace("/\[|\]/", "", $data[0]);
+	// 	$data = trim($data[0]);
+	// 	$split = explode(' ', $data);
+	// 	$horario = $split[1] .= (count($split[1])>5) ? ':00' : '';
+	// 	$split = explode('/', $split[0]);
+	// 	$data = ((count($split[2])>4) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
+	// 	$datahora = $data . 'T' .$horario;
 
-		if ($filiado !== null && $filiado['status'] !== 'DESISTENTE') {
-			$response = $control->atualizarStatus($filiado['id'], 'DESISTENTE');
-			if ($response['success'] === false) {
-				die (json_encode($response));
-			}
-			$count++;
-		}
-	}
+	// 	$data = new DateTime($data.' '.$hora);
+	// 	$datahora = $data->format('Y-m-d H:i:s');
+
+	// 	// pegando usuário ou número
+	// 	preg_match('/\S*\+?[\w\s]+\S*[^:]\ssaiu/', $key, $contato);
+	// 	$contato = trim(utf16_2_utf8($contato[0]));
+	// 	$contato = preg_replace('/\s*saiu/', '',$contato); // remove saiu
+	// 	$contato = preg_replace('/55/', '',$contato); // remove 55
+	// 	// $contato = preg_replace('/\s*/', '',$contato); // remove espaços
+
+	// 	// se for numero celular
+	// 	if (preg_replace('/[\d\s]/', '', $contato) === '') {
+	// 		$contato = preg_replace('/\s/', '', $contato);
+	// 		$contato = substr($contato, 0, 2) . '9' . substr($contato, 2);
+	// 	}
+		
+	// 	$control = new FiliadoControl();
+	// 	$resp = $control->buscarPorNomeNumero($contato);
+	// 	if ($resp['success'] === false) {
+	// 		die($resp); // se ocorrer um erro
+	// 	}
+	// 	$filiado = $resp['data'];
+		
+	// 	// se for encontrado o contato
+	// 	// if ($resp['data'] !== null) array_push($contatos, $resp['data']);
+
+	// 	if ($filiado !== null && $filiado['status'] !== 'DESISTENTE') {
+	// 		$response = $control->atualizarStatus($filiado['id'], 'DESISTENTE');
+	// 		if ($response['success'] === false) {
+	// 			die (json_encode($response));
+	// 		}
+	// 		$count++;
+	// 	}
+	// }
 	$response['success'] = true;
 	$response['data'] = $count;
 	return $response;
@@ -343,52 +464,94 @@ function getFilaidosDesistentes ($txt) {
 function getFiliadosRemovidos ($txt, $grupo) {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 
-	$regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sremoveu\s[\w\W]*?\n/';
+	// $regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sremoveu\s[\w\W]*?\n/';
+	$regex = '/(\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2})\s-?\s?\S*\+?[\w\s]+\S*[^:]\sremoveu\s([\w\W]*?)\n/';
 	preg_match_all($regex, $txt, $matchs);
 	
 	// laço para tratamento
 	$count = 0;
-	foreach ($matchs[0] as $key) {
-		// pegando usuário ou número
-		preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
-		$data = trim($data[0]);
+
+	for ($i=0; $i<count($matchs[0]); $i++) {
+		$data = preg_replace("/\[|\]/", "", $matchs[1][$i]);
+		$data = trim($data);
 		$split = explode(' ', $data);
-		$horario = $split[1] . ':00';
+
+		$horario = $split[1] .= (strlen($split[1])<=5) ? ':00' : '';
+
 		$split = explode('/', $split[0]);
-		$data = '20' . $split[2] . '-' . $split[1] . '-' . $split[0];
+
+		$data = ((strlen($split[2])<=2) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
 		$datahora = $data . 'T' .$horario;
 
-		// removendo o usuário que adicionou os contatos
-		$key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+		$numeros = preg_split("/\se|,/", $matchs[2][$i]);
 
-		// regex para pegar números
-		$regex = '/\d{2}\s\d{4}-\d{4}/';
-		preg_match_all($regex, $key, $numeros);
-		
+		foreach ($numeros as $numero) {
+			$numero = trim(utf16_2_utf8($numero));
+			$numero = preg_replace("/\D/", "", $numero);
+			if (strlen($numero)>0) {
+				$numero = substr($numero, 2, 2) . '9' . substr($numero, 4);
 
-		foreach ($numeros[0] as $numero) {
-			$split = explode(' ', $numero);
-			$numero = $split[0] . '9' . $split[1];
-			$split = explode('-', $numero);
-			$numero = $split[0].$split[1];
-			
-			$control = new FiliadoControl();
-			$response = $control->buscarPorNomeNumero($numero);
-			if ($response['success'] === false) {
-				die (json_encode($response));
-			}
-			$filiado = $response['data'];
-		
-			if ($filiado !== null) {
-				$control = new FiliadoControl(new Filiado($filiado['id']));
-				$response = $control->deletar();
+				$control = new FiliadoControl();
+				$response = $control->buscarPorNomeNumero($numero);
 				if ($response['success'] === false) {
 					die (json_encode($response));
 				}
-				$count++;
+				$filiado = $response['data'];
+			
+				if ($filiado !== null) {
+					$control = new FiliadoControl(new Filiado($filiado['id']));
+					$response = $control->deletar();
+					if ($response['success'] === false) {
+						die (json_encode($response));
+					}
+					$count++;
+				}
 			}
+		
 		}
 	}
+	
+	// foreach ($matchs[0] as $key) {
+	// 	// pegando usuário ou número
+	// 	preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
+	// 	$data = trim($data[0]);
+	// 	$split = explode(' ', $data);
+	// 	$horario = $split[1] . ':00';
+	// 	$split = explode('/', $split[0]);
+	// 	$data = '20' . $split[2] . '-' . $split[1] . '-' . $split[0];
+	// 	$datahora = $data . 'T' .$horario;
+
+	// 	// removendo o usuário que adicionou os contatos
+	// 	$key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+
+	// 	// regex para pegar números
+	// 	$regex = '/\d{2}\s\d{4}-\d{4}/';
+	// 	preg_match_all($regex, $key, $numeros);
+		
+
+	// 	foreach ($numeros[0] as $numero) {
+	// 		$split = explode(' ', $numero);
+	// 		$numero = $split[0] . '9' . $split[1];
+	// 		$split = explode('-', $numero);
+	// 		$numero = $split[0].$split[1];
+			
+	// 		$control = new FiliadoControl();
+	// 		$response = $control->buscarPorNomeNumero($numero);
+	// 		if ($response['success'] === false) {
+	// 			die (json_encode($response));
+	// 		}
+	// 		$filiado = $response['data'];
+		
+	// 		if ($filiado !== null) {
+	// 			$control = new FiliadoControl(new Filiado($filiado['id']));
+	// 			$response = $control->deletar();
+	// 			if ($response['success'] === false) {
+	// 				die (json_encode($response));
+	// 			}
+	// 			$count++;
+	// 		}
+	// 	}
+	// }
 	$response['success'] = true;
 	$response['data'] = $count;
 	return $response;
