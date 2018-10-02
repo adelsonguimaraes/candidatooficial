@@ -455,6 +455,7 @@ function getFilaidosDesistentes ($txt) {
 	// 		}
 	// 		$count++;
 	// 	}
+	
 	// }
 	$response['success'] = true;
 	$response['data'] = $count;
