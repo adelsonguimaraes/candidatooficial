@@ -173,14 +173,23 @@ function ScannearTxt() {
 function getNomeGrupo ($nome) {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 
-	$regex = '/#[\w\W]*?[\s|.]/';
-	preg_match_all($regex, $nome, $resultGrupo);
-	if (count($resultGrupo[0])<=0) {
-		$response['msg'] = 'Erro no nome do Grupo';
+	// $regex = '/#[\w\W]*?[\s|.]/';
+	// preg_match_all($regex, $nome, $resultGrupo);
+	// if (count($resultGrupo[0])<=0) {
+	// 	$response['msg'] = 'Erro no nome do Grupo';
+	// 	die (json_encode($response));
+	// }
+
+	// $grupo = substr(trim($resultGrupo[0][0]), 0, -1);
+
+	$grupo = str_replace("Conversa do WhatsApp com", "", $nome);
+	$grupo = str_replace(".txt", "", $grupo);
+	$grupo = trim($grupo);
+
+	if ($grupo==="") {
+		$response['msg'] = 'Não foi possível identificar o nome do grupo no arquivo.';
 		die (json_encode($response));
 	}
-
-	$grupo = substr(trim($resultGrupo[0][0]), 0, -1);
 
 	$controlLG = new LidergrupoControl();
 	$resp = $controlLG->buscarGrupo($grupo);
@@ -197,7 +206,8 @@ function getNomeGrupo ($nome) {
 function getFiliadosAdicionados ($txt, $grupo) {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 
-	$regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou\s[\w\W]*?\n/';
+	// $regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou\s[\w\W]*?\n/';
+	$regerx = '/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\sadicionou\s[\w\W]*?\n/';
 	preg_match_all($regex, $txt, $matchs);
 	// if (count($matchs[0])<=0) {
 		// $response['msg'] = 'Nenhuma movimentação foi encontrada';
@@ -208,19 +218,23 @@ function getFiliadosAdicionados ($txt, $grupo) {
 	$count = 0;
 	foreach ($matchs[0] as $key) {
 		// pegando usuário ou número
-		preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
+		// preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}/', $key, $data);
+		preg_match('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}/', $key, $data);
+		$data = preg_replace("/\[|\]/", "", $data[0]);
 		$data = trim($data[0]);
 		$split = explode(' ', $data);
-		$horario = $split[1] . ':00';
+		$horario = $split[1] .= (count($split[1])>5) ? ':00' : '';
 		$split = explode('/', $split[0]);
-		$data = '20' . $split[2] . '-' . $split[1] . '-' . $split[0];
+		$data = ((count($split[2])>4) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
 		$datahora = $data . 'T' .$horario;
 
 		// removendo o usuário que adicionou os contatos
-		$key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+		// $key = preg_replace('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
+		$key = preg_replace('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\sadicionou/', '', $key);
 
 		// regex para pegar números
-		$regex = '/\d{2}\s\d{4}-\d{4}/';
+		// $regex = '/\d{2}\s\d{4}-\d{4}/';
+		$regex = '/\d{2}\s?\S?\d{4}\S\d{4}/';
 		preg_match_all($regex, $key, $numeros);
 		// if (count($numeros[0])<=0) {
 		// 	$response['msg'] = 'Nenhum numero foi encontrada';
@@ -259,7 +273,8 @@ function getFiliadosAdicionados ($txt, $grupo) {
 function getFilaidosDesistentes ($txt) {
 	$response = array('success'=>false, 'data'=>'', 'msg'=>'');
 
-	$regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\ssaiu/';
+	// $regex = '/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}\s?\w{0,2}\s-\s\S*\+?[\w\s]+\S*[^:]\ssaiu/';
+	$regex = '/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}\s-?\s?\S*\+?[\w\s]+\S*[^:]\ssaiu/';
 	preg_match_all($regex, $txt, $result);
 	// if (count($result[0])<=0) {
 	// 	$response['msg'] = 'Nenhuma movimentação foi encontrada';
@@ -271,12 +286,20 @@ function getFilaidosDesistentes ($txt) {
 	// laço para tratamento
 	foreach ($result[0] as $key) {
 		// quebrando a string
-		preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}/', $key, $datahora);
-		$split = explode(' ', $datahora[0]);
-		$data = str_replace('/', '-', $split[0]);
-		$hora = $split[1];
-		$split = explode('-', $data);
-		$data = '20'.$split[2]. '-' .$split[1]. '-' .$split[0];
+		// preg_match('/\d{2}\/\d{2}\/\d{2}\s\d{1,2}:\d{2}/', $key, $datahora);
+		// $split = explode(' ', $datahora[0]);
+		// $data = str_replace('/', '-', $split[0]);
+		// $hora = $split[1];
+		// $split = explode('-', $data);
+		// $data = '20'.$split[2]. '-' .$split[1]. '-' .$split[0];
+		preg_match('/\[?\d{2}\/\d{2}\/\d{0,4}\s\d{1,2}:\d{2}:?\d{0,2}\]?\s?\w{0,2}/', $key, $data);
+		$data = preg_replace("/\[|\]/", "", $data[0]);
+		$data = trim($data[0]);
+		$split = explode(' ', $data);
+		$horario = $split[1] .= (count($split[1])>5) ? ':00' : '';
+		$split = explode('/', $split[0]);
+		$data = ((count($split[2])>4) ? '20'.$split[2] : $split[2])  . '-' . $split[1] . '-' . $split[0];
+		$datahora = $data . 'T' .$horario;
 
 		$data = new DateTime($data.' '.$hora);
 		$datahora = $data->format('Y-m-d H:i:s');
